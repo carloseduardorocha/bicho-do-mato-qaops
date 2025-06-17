@@ -8,3 +8,5 @@
   <p class="max-w-xl mx-auto mt-2">Conheça nossos projetos, adote um pet e faça parte da transformação social e ambiental que queremos construir juntos.</p>
 </section>
 @endsection
+
+@vite('resources/js/blade-vue.ts')

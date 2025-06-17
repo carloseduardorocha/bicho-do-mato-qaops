@@ -1,4 +1,4 @@
-<nav class="bg-green-700 text-white p-4">
+<!-- <nav class="bg-green-700 text-white p-4">
   <div class="container mx-auto flex justify-between items-center">
     <a href="/" class="flex items-center gap-2">
       <img src="{{ Vite::asset('resources/images/icons/menu.png') }}" alt="Menu" class="h-6">
@@ -16,4 +16,7 @@
       <img src="{{ Vite::asset('resources/images/icons/icone_email.png') }}" alt="Contato" class="h-6">
     </a>
   </div>
-</nav>
+</nav> -->
+<div id="navbar"></div>
+
+@vite('resources/js/blade-vue.ts')
