@@ -18,6 +18,7 @@ Route::middleware([TrackPageViews::class])->group(function () {
     Route::get('/institucional', [PageController::class, 'about'])->name('institucional');
     Route::get('/depoimentos', [TestimonialController::class, 'index'])->name('depoimentos');
     Route::get('/noticias', [NewsController::class, 'index'])->name('noticias');
+    Route::get('/noticias', [NewsController::class, 'index'])->name('news.index');
     Route::get('/parceiros', [PartnerController::class, 'index'])->name('parceiros');
     Route::get('/adote', [AdocaoController::class, 'index'])->name('adote');
     Route::get('/noticias/{news}', [NewsController::class, 'show'])->name('news.show');
