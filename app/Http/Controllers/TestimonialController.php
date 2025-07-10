@@ -44,4 +44,10 @@ class TestimonialController extends Controller
         $testimonial->delete();
         return redirect()->route('admin.testimonials.index')->with('success', 'Depoimento removido.');
     }
+
+    public function publicIndex()
+    {
+        $testimonials = Testimonial::latest()->get();
+        return view('home', compact('testimonials'));
+    }
 }

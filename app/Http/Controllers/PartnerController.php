@@ -44,4 +44,10 @@ class PartnerController extends Controller
         $partner->delete();
         return redirect()->route('admin.parceiros.index')->with('success', 'Parceiro removido.');
     }
+
+    public function publicIndex()
+    {
+        $partners = Partner::all();
+        return view('home', compact('partners'));
+    }
 }

@@ -1,21 +1,24 @@
-@extends('layouts.app')
+<?php
 
-@section('title', 'Adote um Pet')
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-@section('content')
-  <div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-4">Pets disponíveis para adoção</h1>
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('pets', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->string('size')->nullable();
+            $table->timestamps();
+        });
+    }
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      @forelse ($pets as $pet)
-        <div class="bg-white rounded shadow p-4">
-          <h2 class="text-lg font-semibold">{{ $pet->name ?? 'Nome não informado' }}</h2>
-          <p class="text-gray-700">{{ $pet->description ?? 'Sem descrição' }}</p>
-          <p class="text-sm text-gray-500">Tamanho: {{ $pet->size ?? 'Desconhecido' }}</p>
-        </div>
-      @empty
-        <p class="text-gray-500">Nenhum pet disponível no momento.</p>
-      @endforelse
-    </div>
-  </div>
-@endsection
+    public function down(): void
+    {
+        Schema::dropIfExists('pets');
+    }
+};

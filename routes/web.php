@@ -20,6 +20,7 @@ Route::middleware([TrackPageViews::class])->group(function () {
     Route::get('/noticias', [NewsController::class, 'index'])->name('noticias');
     Route::get('/parceiros', [PartnerController::class, 'index'])->name('parceiros');
     Route::get('/adote', [AdocaoController::class, 'index'])->name('adote');
+    Route::get('/noticias/{news}', [NewsController::class, 'show'])->name('news.show');
 });
 
 // Rotas protegidas para painel admin
