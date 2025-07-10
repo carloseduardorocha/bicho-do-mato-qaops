@@ -7,6 +7,7 @@ import TestimonialsHome from './components/TestimonialsHome.vue';
 import PartnersHome from './components/PartnersHome.vue';
 import SocialMediaHome from './components/SocialMediaHome.vue';
 import InfoFooter from './components/InfoFooter.vue';
+import Institutional from './components/Institutional.vue';
 
 const bottomNavEl = document.getElementById('bottom-navbar-vue');
 if (bottomNavEl) {
@@ -47,3 +48,9 @@ const infoFooter = document.getElementById('info-footer');
 if (infoFooter) {
     createApp(InfoFooter).mount(infoFooter);
 }
+
+const institutional = document.getElementById('institutional');
+if (institutional) {
+    createApp(Institutional).mount(institutional);
+}
+
