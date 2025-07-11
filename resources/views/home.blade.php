@@ -156,16 +156,20 @@
         <span>bug_alarme@hotmail.com</span>
       </a>
     </div>
-    <div class="bg-[#F5E8D1] rounded shadow p-4 text-[#5C3A21]">
-      <h3 class="font-bold mb-2">Onde estamos:</h3>
+  <div class="mt-8">
+    <h3 class="text-2xl font-bold text-white mb-4">ONDE ESTAMOS</h3>
+    <div class="w-full h-64 rounded-lg overflow-hidden mb-4">
       <iframe
-        class="w-full h-48 object-cover mt-2 rounded"
-        frameborder="0"
-        style="border:0"
-        src="https://www.google.com/maps/embed/v1/view?key=YOUR_GOOGLE_MAPS_API_KEY&center=-27.332029206292926,-53.38300863558247&zoom=18"
-        allowfullscreen>
+        src="https://www.google.com/maps?q=-27.332029206292926,-53.38300863558247&hl=pt-BR&z=16&amp;output=embed"
+        width="100%"
+        height="100%"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
       </iframe>
     </div>
+    <p class="text-[#F5E8D1]">Endereço: Vila Linha Iraí, S/N, Interior de Frederico Westphalen, 98.400-000.</p>
   </div>
 </section>
 @endsection
