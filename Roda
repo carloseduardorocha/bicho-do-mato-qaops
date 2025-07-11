@@ -11,8 +11,9 @@ parada
 ./vendor/bin/sail npm run dev
 
 
+it pull origin main   # (caso queira garantir atualização antes)
+
 git status
 git add .
-git commit -m "ajustes nas rotas e views"
-git pull origin main   # (caso queira garantir atualização antes)
+git commit -m "ajuste funcionamento blade ajude e dados e textos ajustado caxaria e dados de contato e deposito da ong, retificado tambem pagina home imagem sai paapagaio para dogs, alem de dados extra de contato e docao"
 git push origin main
