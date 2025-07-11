@@ -38,6 +38,18 @@
     </a>
   </div>
 
+  <div class="bg-[#F3A632] text-white p-4 rounded-lg max-w-md mx-auto mb-6">
+    <h3 class="text-xl font-bold mb-4 text-center">VENHA FAZER PARTE DESSA CORRENTE!</h3>
+    <div class="flex justify-center mb-4 space-x-2">
+      <img src="/images/header/bazarodoar.jpg" alt="Bazar Doar" class="rounded-lg shadow-md w-28 h-28 object-cover">
+      <img src="/images/header/bazardog.jpg" alt="Bazar Dog" class="rounded-lg shadow-md w-28 h-28 object-cover">
+      <img src="/images/header/acao_grenal.jpg" alt="Ação Grenal" class="rounded-lg shadow-md w-28 h-28 object-cover">
+    </div>
+    <p class="text-sm mb-2">Nossa ONG realiza bazares, ações de arrecadação de fundos e campanhas de doação com apoio de diversas entidades, grupos e empresas que acreditam no nosso propósito.</p>
+    <p class="text-sm mb-2">Cada evento, bazar ou ação solidária gera recursos essenciais para manter nossos animais bem cuidados, além de fortalecer a corrente do bem e envolver cada vez mais pessoas nessa causa.</p>
+    <p class="text-sm mb-2">Seja um voluntário, participe das nossas feiras, ações de arrecadação ou apadrinhe um de nossos animais. Sua ajuda faz a diferença!</p>
+  </div>
+
   <div class="bg-green-800 p-4 rounded-lg mb-6 max-w-md mx-auto text-left">
     <h3 class="text-lg font-bold mb-2 text-white">Entre em contato conosco:</h3>
     <div class="bg-[#F5E8D1] text-[#2F5233] p-2 rounded mb-2 flex flex-col">
