@@ -2,3 +2,10 @@
 ./vendor/bin/sail composer install
 ./vendor/bin/sail npm install
 ./vendor/bin/sail artisan migrate
+
+
+parada
+
+./vendor/bin/sail down
+./vendor/bin/sail up -d
+./vendor/bin/sail npm run dev
