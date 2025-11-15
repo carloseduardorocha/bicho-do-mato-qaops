@@ -28,7 +28,7 @@ Route::middleware([TrackPageViews::class])->group(function () {
 });
 
 // Rotas protegidas para painel admin
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->group(function () {
     // Notícias
     Route::get('/news', [NewsController::class, 'index'])->name('admin.news.index');
     Route::get('/news/create', [NewsController::class, 'create'])->name('admin.news.create');

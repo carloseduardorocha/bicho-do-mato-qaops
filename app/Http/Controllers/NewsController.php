@@ -10,7 +10,8 @@ class NewsController extends Controller
 {
     public function index()
     {
-        $noticias = News::latest()->get();
+        $noticias = News::get();
+        dd($noticias);
         return view('admin.news.index', compact('noticias'));
     }
 
@@ -22,10 +23,10 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title'   => 'required|string|max:255',
-            'author'  => 'required|string|max:100',
-            'content' => 'required|string',
-            'image'   => 'nullable|image|max:2048'
+            'title'       => 'required|string|max:255',
+            'author'      => 'required|string|max:100',
+            'description' => 'required|string|max:255',
+            'image'       => 'nullable|image|max:2048'
         ]);
 
         if ($request->hasFile('image')) {
