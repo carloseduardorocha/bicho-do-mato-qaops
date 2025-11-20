@@ -1,32 +1,93 @@
-@extends('layouts.app')
+@extends('admin.layout')
 
-@section('title', 'Admin - Depoimentos')
+@section('title', 'Depoimentos')
+@section('page-title', 'Gerenciar Depoimentos')
+
+@php
+    $breadcrumbs = [
+        ['label' => 'Dashboard', 'url' => route('admin.dashboard.index')],
+        ['label' => 'Depoimentos', 'url' => '']
+    ];
+@endphp
 
 @section('content')
-<section class="max-w-5xl mx-auto py-8 px-4">
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-semibold">Gerenciar Depoimentos</h2>
-    <a href="{{ route('admin.testimonials.create') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Novo Depoimento</a>
-  </div>
-
-  @forelse ($depoimentos as $depoimento)
-    <div class="bg-white p-4 mb-4 rounded shadow">
-      <div class="flex items-center gap-4">
-        @if($depoimento->image_path)
-          <img src="{{ asset('storage/' . $depoimento->image_path) }}" class="h-16 w-16 object-cover rounded-full" alt="{{ $depoimento->name }}">
-        @endif
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-comments me-2"></i>Lista de Depoimentos Aprovados</span>
         <div>
-          <h3 class="text-lg font-semibold">{{ $depoimento->name }}</h3>
-          <p class="text-sm text-gray-600">{{ $depoimento->message }}</p>
+            <a href="{{ route('admin.testimonials.moderate') }}" class="btn btn-primary btn-sm me-2">
+                <i class="fas fa-clock"></i> Moderar Pendentes
+            </a>
+            <a href="{{ route('admin.testimonials.create') }}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Novo Depoimento
+            </a>
         </div>
-      </div>
-      <form action="{{ route('admin.testimonials.destroy', $depoimento) }}" method="POST" class="mt-2">
-        @csrf @method('DELETE')
-        <button class="text-sm text-red-600 hover:underline">Excluir</button>
-      </form>
     </div>
-  @empty
-    <p class="text-center text-gray-500">Nenhum depoimento cadastrado.</p>
-  @endforelse
-</section>
+    
+    <div class="card-body">
+        @if($testimonials->count() > 0)
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th width="80">ID</th>
+                            <th width="100">Foto</th>
+                            <th>Nome</th>
+                            <th>Depoimento</th>
+                            <th width="150" class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($testimonials as $testimonial)
+                        <tr>
+                            <td><strong>#{{ $testimonial->id }}</strong></td>
+                            <td>
+                                @if($testimonial->image)
+                                    <img src="{{ asset('storage/' . $testimonial->image) }}" alt="{{ $testimonial->name }}" class="rounded-circle img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                                @else
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                                        {{ strtoupper(substr($testimonial->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                            </td>
+                            <td><strong>{{ $testimonial->name }}</strong></td>
+                            <td>
+                                <span class="text-muted">{{ Str::limit($testimonial->description, 80) }}</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="{{ route('admin.testimonials.edit', $testimonial->id) }}" class="btn btn-sm btn-warning" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $testimonial->id }})" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                                
+                                <form id="delete-form-{{ $testimonial->id }}" action="{{ route('admin.testimonials.destroy', $testimonial->id) }}" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginação -->
+            <div class="d-flex justify-content-center mt-4">
+                {{ $testimonials->links() }}
+            </div>
+        @else
+            <div class="text-center py-5">
+                <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Nenhum depoimento aprovado ainda.</p>
+                <a href="{{ route('admin.testimonials.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Cadastrar Primeiro Depoimento
+                </a>
+            </div>
+        @endif
+    </div>
+</div>
 @endsection

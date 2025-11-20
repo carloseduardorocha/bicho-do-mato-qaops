@@ -9,8 +9,23 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule): void
     {
-        // Comando que limpa os logs antigos de acessos
-        $schedule->command('pageviews:clear-old')->daily();
+        // Limpeza de imagens de parceiros
+        $schedule->command('partners:cleanup-images')
+            ->weekly()
+            ->sundays()
+            ->at('03:00');
+
+        // Limpeza de imagens de depoimentos
+        $schedule->command('testimonials:cleanup-images')
+            ->weekly()
+            ->sundays()
+            ->at('03:15');
+
+        // Limpeza de imagens de notícias
+        $schedule->command('news:cleanup-images')
+            ->weekly()
+            ->sundays()
+            ->at('03:30');
     }
 
     protected function commands(): void

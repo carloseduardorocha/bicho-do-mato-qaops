@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('logo')->nullable();
-            $table->string('link')->nullable();
+            $table->string('name', 100);
+            $table->string('image', 255)->nullable();
+            $table->string('link', 255)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

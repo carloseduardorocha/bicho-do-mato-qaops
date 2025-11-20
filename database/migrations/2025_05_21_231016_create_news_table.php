@@ -13,11 +13,17 @@ return new class extends Migration
     {
         Schema::create('news', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title', 255);
             $table->text('description');
-            $table->string('author')->nullable();
-            $table->string('image')->nullable();
+            $table->unsignedBigInteger('author_id');
+            $table->text('images')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('author_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 
