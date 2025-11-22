@@ -22,6 +22,9 @@ class UserSeeder extends Seeder
                 'email'    => $email,
                 'password' => Hash::make('admin123'),
             ]);
+
+            $this->command->info('✓ Usuário criado com sucesso!');
+            $this->command->info('  Email: admin@admin.com | Senha: admin123');
         }
     }
 }

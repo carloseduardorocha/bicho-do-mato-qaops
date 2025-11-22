@@ -779,7 +779,7 @@
                             <img src="{{ asset('storage/' . ($item['image'])) }}" alt="{{ $item['name'] }}">
                         </div>
                         <h3 class="depoimento-nome">{{ $item['name'] }}</h3>
-                        <p class="depoimento-texto">{{ $item['description'] }}</p>
+                        <p class="depoimento-texto">{{ Str::limit($item['description'], 100) }}</p>
                     </div>
                 @endforeach
 
