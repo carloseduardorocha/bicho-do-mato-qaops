@@ -76,7 +76,7 @@
             </div>
 
             <!-- Paginação -->
-            <div class="d-flex justify-content-center mt-4">
+            <div class="justify-content-center mt-4">
                 {{ $testimonials->links() }}
             </div>
         @else

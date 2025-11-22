@@ -306,6 +306,114 @@
         max-width: calc(100% - 20px);
     }
 
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+        margin-bottom: 0;
+    }
+
+    .pagination {
+        display: flex;
+        gap: 10px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .pagination li {
+        display: inline-block;
+    }
+
+    .pagination a,
+    .pagination span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 50px;
+        height: 50px;
+        padding: 0 15px;
+        background: #f5e8d1;
+        color: #2f5233;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 800;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .pagination a:hover {
+        background: #f3a632;
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(243, 166, 50, 0.4);
+    }
+
+    .pagination .active span {
+        background: #f3a632;
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(243, 166, 50, 0.4);
+    }
+
+    .pagination .disabled span {
+        background: rgba(245, 232, 209, 0.4);
+        color: rgba(47, 82, 51, 0.4);
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    /* Toast Customizado */
+    #custom-toast {
+        position: fixed;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #f3a632;
+        color: #2f5233;
+        padding: 20px 30px;
+        border-radius: 15px;
+        font-size: 1.3rem;
+        font-weight: 700;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 300px;
+        max-width: 600px;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.5s ease;
+        z-index: 9999;
+    }
+
+    #custom-toast.toast-show {
+        opacity: 1;
+        pointer-events: auto;
+        top: 80px;
+    }
+
+    #custom-toast.toast-success {
+        background-color: #f3a632;
+        color: #2f5233;
+    }
+
+    #custom-toast.toast-error {
+        background-color: #d32f2f;
+        color: #fff;
+    }
+
+    #custom-toast button {
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: inherit;
+        cursor: pointer;
+        margin-left: 20px;
+    }
+
     /* Responsividade */
     @media (max-width: 1300px) {
       .depoimentos-grid {
@@ -383,46 +491,43 @@
         <!-- Grid de Depoimentos com Scroll -->
         <div class="depoimentos-grid-wrapper">
             <div class="depoimentos-grid">
-                {{-- @foreach($depoimentos as $depoimento) --}}
-                
-                <!-- Depoimento 1 -->
-                <div class="depoimento-card">
-                    <div class="depoimento-avatar">
-                        <img src="{{ asset('images/depoimento.jpg') }}" alt="Gilberto Souza">
+                 @foreach($testimonials as $testimonial)
+                    <div class="depoimento-card">
+                        <div class="depoimento-avatar">
+                            <img src="{{ asset('storage/' . $testimonial['image']) }}" alt="{{ $testimonial['name'] }}">
+                        </div>
+                        <h3 class="depoimento-nome">{{ $testimonial['name'] }}</h3>
+                        <p class="depoimento-texto">{{ $testimonial['description'] }}</p>
                     </div>
-                    <h3 class="depoimento-nome">Gilberto Souza</h3>
-                    <p class="depoimento-texto">Graças a ONG, encontrei o melhor amigo que eu poderia ter!</p>
-                </div>
-
-                <!-- Depoimento 2 -->
-                <div class="depoimento-card">
-                    <div class="depoimento-avatar">
-                        <img src="{{ asset('images/depoimento.jpg') }}" alt="Cintia da Silva">
-                    </div>
-                    <h3 class="depoimento-nome">Cintia da Silva</h3>
-                    <p class="depoimento-texto">Adotar o Thor foi uma das melhores decisões da minha vida. O aplicativo facilitou todo o processo...</p>
-                </div>
-
-                <!-- Depoimento 3 -->
-                <div class="depoimento-card">
-                    <div class="depoimento-avatar">
-                        <img src="{{ asset('images/depoimento.jpg') }}" alt="Camila Fontes">
-                    </div>
-                    <h3 class="depoimento-nome">Camila Fontes</h3>
-                    <p class="depoimento-texto">Adotei minha cachorrinha há 2 anos e foi a melhor decisão da minha vida. Eles têm tanto amor pra dar, só precisam de uma chance!</p>
-                </div>
-
-                <!-- Depoimento 4 -->
-                <div class="depoimento-card">
-                    <div class="depoimento-avatar">
-                        <img src="{{ asset('images/depoimento.jpg') }}" alt="Bruno Oliveira">
-                    </div>
-                    <h3 class="depoimento-nome">Bruno Oliveira</h3>
-                    <p class="depoimento-texto">Tem tanto bichinho esperando por um lar... Comprar nunca mais, agora só adoto! A gratidão deles é algo que não tem preço.</p>
-                </div>
-
-                {{-- @endforeach --}}
+                @endforeach
             </div>
+        </div>
+        <!-- Paginação -->
+        <div class="pagination-wrapper">
+            <ul class="pagination">
+                {{-- Previous --}}
+                @if ($testimonials->onFirstPage())
+                    <li class="disabled"><span>&laquo;</span></li>
+                @else
+                    <li><a href="{{ $testimonials->previousPageUrl() }}">&laquo;</a></li>
+                @endif
+
+                {{-- Números --}}
+                @foreach ($testimonials->getUrlRange(1, $testimonials->lastPage()) as $page => $url)
+                    @if ($page == $testimonials->currentPage())
+                        <li class="active"><span>{{ $page }}</span></li>
+                    @else
+                        <li><a href="{{ $url }}">{{ $page }}</a></li>
+                    @endif
+                @endforeach
+
+                {{-- Next --}}
+                @if ($testimonials->hasMorePages())
+                    <li><a href="{{ $testimonials->nextPageUrl() }}">&raquo;</a></li>
+                @else
+                    <li class="disabled"><span>&raquo;</span></li>
+                @endif
+            </ul>
         </div>
 
         <hr class="linha-branca-responsiva">
@@ -433,12 +538,12 @@
         </div>
 
         <div class="form-wrapper">
-            <form action="{{ route('public.home') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('public.testimonials.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <!-- Nome -->
                 <div class="form-group">
-                    <label class="form-label" for="nome">Nome</label>
+                    <label class="form-label" for="nome">Nome <span style="color:red;">*</span></label>
                     <input 
                         type="text" 
                         id="nome" 
@@ -449,25 +554,9 @@
                     >
                 </div>
 
-                <!-- Título -->
-                <div class="form-group">
-                    <label class="form-label" for="titulo">Título</label>
-                    <input 
-                        type="text" 
-                        id="titulo" 
-                        name="titulo" 
-                        class="form-input" 
-                        placeholder="Digite o título do seu depoimento..."
-                        maxlength="100"
-                        required
-                        oninput="updateCharCount('titulo', 'titulo-count', 100)"
-                    >
-                    <div class="char-count"><span id="titulo-count">0</span>/100</div>
-                </div>
-
                 <!-- Descrição -->
                 <div class="form-group">
-                    <label class="form-label" for="descricao">Descrição</label>
+                    <label class="form-label" for="descricao">Descrição <span style="color:red;">*</span></label>
                     <textarea 
                         id="descricao" 
                         name="descricao" 
@@ -482,7 +571,7 @@
 
                 <!-- Upload de Foto -->
                 <div class="form-group">
-                    <label class="form-label">Adicione sua foto</label>
+                    <label class="form-label">Adicione sua foto <span style="color:red;">*</span></label>
                     <div class="file-upload-wrapper">
                         <button type="button" class="file-upload-btn" onclick="document.getElementById('foto').click()">
                             <i class="fas fa-camera"></i>
@@ -510,6 +599,10 @@
         </div>
     </div>
 </section>
+<div id="custom-toast" class="toast-hidden">
+    <span id="toast-message"></span>
+    <button id="toast-close">&times;</button>
+</div>
 
 <script>
     // Atualizar contador de caracteres
@@ -538,6 +631,38 @@
         document.getElementById('descricao-count').textContent = '0';
         document.getElementById('file-name').textContent = 'Nenhuma foto selecionada';
     }
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const toast = document.getElementById('custom-toast');
+    const toastMessage = document.getElementById('toast-message');
+    const toastClose = document.getElementById('toast-close');
+
+    function showToast(message, type = 'success', duration = 5000) {
+        toastMessage.textContent = message;
+        toast.className = `toast-show toast-${type}`;
+
+        // Fechar automaticamente
+        setTimeout(() => {
+            toast.className = 'toast-hidden';
+        }, duration);
+    }
+
+    // Botão de fechar
+    toastClose.addEventListener('click', () => {
+        toast.className = 'toast-hidden';
+    });
+
+    // Mensagens do Laravel
+    @if(session('success'))
+        showToast(@json(session('success')), 'success', 5000);
+    @endif
+
+    @if(session('error'))
+        showToast(@json(session('error')), 'error', 5000);
+    @endif
+});
 </script>
 
 @endsection

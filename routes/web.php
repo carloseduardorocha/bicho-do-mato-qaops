@@ -8,6 +8,7 @@ use App\Http\Controllers\Public\PublicController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::controller(PublicController::class)->name('public.')->group(function () {
     Route::get('/', 'home')->name('home');
@@ -15,6 +16,7 @@ Route::controller(PublicController::class)->name('public.')->group(function () {
     Route::get('/institucional', 'about')->name('about');
     Route::get('/parceiros', 'partners')->name('partners');
     Route::get('/depoimentos', 'testimonials')->name('testimonials');
+    Route::post('/depoimentos', 'storeTestimonial')->name('testimonials.store');
     Route::get('/noticias', 'news')->name('news');
     Route::get('/noticias/{id}', 'showNews')->name('show-news');
 });
@@ -51,6 +53,14 @@ Route::middleware(['auth.custom'])->prefix('admin')->name('admin.')->group(funct
         Route::put('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'destroy')->name('destroy');
         Route::post('/{id}/delete-image', 'deleteImage')->name('deleteImage');
+    });
+    Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{id}/edit', 'edit')->name('edit');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'destroy')->name('destroy');
     });
 });
 

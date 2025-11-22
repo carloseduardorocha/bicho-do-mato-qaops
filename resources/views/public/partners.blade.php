@@ -109,7 +109,7 @@
     /* Grid de Parceiros */
     .parceiros-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 40px;
         margin-bottom: 60px;
     }
@@ -382,39 +382,11 @@
 
         <!-- Grid de Parceiros -->
         <div class="parceiros-grid">
-            {{-- @foreach($parceiros as $parceiro) --}}
-            
-            <!-- Parceiro 1 - Logo Bicho do Mato Amarelo -->
-            <a href="https://www.instagram.com/bichodomato.ong" class="parceiro-card" target="_blank">
-                <img src="{{ asset('images/logo-bicho-do-mato.png') }}" alt="Bicho do Mato" class="parceiro-logo">
-            </a>
-
-            <!-- Parceiro 2 - Logo Bicho do Mato Verde -->
-            <a href="https://www.facebook.com/bichodomato" class="parceiro-card" target="_blank">
-                <img src="{{ asset('images/logo-bicho-do-mato-verde.png') }}" alt="Parceiro 2" class="parceiro-logo">
-            </a>
-
-            <!-- Parceiro 3 - Logo Bicho do Mato Marrom -->
-            <a href="https://www.instagram.com/bichodomato.ong" class="parceiro-card" target="_blank">
-                <img src="{{ asset('images/logo-bicho-do-mato-marrom.png') }}" alt="Parceiro 3" class="parceiro-logo">
-            </a>
-
-            <!-- Parceiro 4 -->
-            <a href="https://www.instagram.com/bichodomato.ong" class="parceiro-card" target="_blank">
-                <img src="{{ asset('images/logo-bicho-do-mato.png') }}" alt="Parceiro 4" class="parceiro-logo">
-            </a>
-
-            <!-- Parceiro 5 -->
-            <a href="https://www.instagram.com/bichodomato.ong" class="parceiro-card" target="_blank">
-                <img src="{{ asset('images/logo-bicho-do-mato-verde.png') }}" alt="Parceiro 5" class="parceiro-logo">
-            </a>
-
-            <!-- Parceiro 6 -->
-            <a href="https://www.instagram.com/bichodomato.ong" class="parceiro-card" target="_blank">
-                <img src="{{ asset('images/logo-bicho-do-mato-marrom.png') }}" alt="Parceiro 6" class="parceiro-logo">
-            </a>
-
-            {{-- @endforeach --}}
+            @foreach($partners as $partner)
+                <a href="{{ $partner['link'] }}" class="parceiro-card" target="_blank">
+                    <img src="{{ asset('storage/' . $partner['image']) }}" alt="{{ $partner['name'] }}" class="parceiro-logo">
+                </a>
+            @endforeach
         </div>
 
         <!-- Botão Seja um Parceiro -->

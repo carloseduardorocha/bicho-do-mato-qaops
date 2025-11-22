@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Notícia - Bicho do Mato')
+@section('title', $news['title'] . ' - Bicho do Mato')
 
 @section('content')
 <style>
@@ -471,68 +471,50 @@
     <hr class="linha-branca-responsiva">    
     <div class="noticia-container">
         <div class="noticia-title">
-            <h1><span class="noticia">Adoção de gatos registra aumento e traz esperança para protetores</span></h1>
+            <h1><span class="noticia">{{ $news['title'] }}</span></h1>
         </div>
 
         <!-- Conteúdo da Notícia -->
         <div class="content-section">
             <!-- Card com descrição -->
             <div class="content-card">
-                <p>
-                    {{-- @if(isset($noticia)) --}}
-                        {{-- {{ $noticia->descricao }} --}}
-                    {{-- @else --}}
-                        Nos últimos meses, ONGs e abrigos de proteção animal em diversas regiões do país têm comemorado uma boa notícia: o aumento nas adoções de gatos. Dados informais coletados por instituições como a ONG Bicho do Mato e outras organizações apontam um crescimento significativo na procura por felinos, especialmente após campanhas de conscientização intensificadas nas redes sociais.
-                        <br><br>
-                        Especialistas em comportamento animal e protetores independentes apontam que esse avanço se deve à combinação de fatores. "A maior visibilidade dos gatos nas redes sociais, a percepção de que são animais independentes e adaptáveis a ambientes menores — como apartamentos — e a conscientização sobre a importância da adoção responsável são os principais motivos por trás da mudança", explica Ana Paula Ribeiro, voluntária da ONG Bicho do Mato.
-                        <br><br>
-                        "Antes, os gatos eram deixados de lado nas feiras de adoção, onde os cães costumavam chamar mais atenção. Hoje, as pessoas estão mais abertas a conhecer e se apaixonar pelos felinos", comenta o veterinário Fernando Dias. "Muitas pessoas passaram a buscar companhia e conforto nos animais. E os gatos, com sua presença tranquila, se tornaram uma escolha popular."
-                    {{-- @endif --}}
-                </p>
+                <p>{!! nl2br(e($news['description'])) !!}</p>
             </div>
 
-            <hr class="linha-branca-responsiva">
+            @php
+                $images = !empty($news['images']) ? json_decode($news['images'], true) : [];
+            @endphp
 
-            <!-- Fotos no fundo verde -->
-            <div class="section-title-verde">
-                <h3><span class="fotos">FOTOS</span> <span class="da-noticia">da notícia</span></h3>
-            </div>
+            @if(!empty($images))
+                <hr class="linha-branca-responsiva">
 
-            <!-- Grid de Fotos -->
-            <div class="fotos-grid">
-                {{-- @foreach($noticia->fotos as $foto) --}}
-                    <div class="foto-item" onclick="openModal(0)">
-                        <img src="{{ asset('images/arara.jpg') }}" alt="Foto da notícia">
-                    </div>
-                {{-- @endforeach --}}
-
-                <div class="foto-item" onclick="openModal(1)">
-                    <img src="{{ asset('images/arara.jpg') }}" alt="Foto da notícia">
+                <!-- Fotos no fundo verde -->
+                <div class="section-title-verde">
+                    <h3><span class="fotos">FOTOS</span> <span class="da-noticia">da notícia</span></h3>
                 </div>
 
-                <div class="foto-item" onclick="openModal(2)">
-                    <img src="{{ asset('images/arara.jpg') }}" alt="Foto da notícia">
+                <!-- Grid de Fotos -->
+                <div class="fotos-grid">
+                    @foreach($images as $index => $imagePath)
+                        <div class="foto-item" onclick="openModal(<?= $index ?>)">
+                            <img src="{{ asset('storage/' . $imagePath) }}" alt="Foto da notícia {{ $index + 1 }}">
+                        </div>
+                    @endforeach
                 </div>
-
-                <div class="foto-item" onclick="openModal(3)">
-                    <img src="{{ asset('images/arara.jpg') }}" alt="Foto da notícia">
-                </div>
-
-                <div class="foto-item" onclick="openModal(4)">
-                    <img src="{{ asset('images/arara.jpg') }}" alt="Foto da notícia">
-                </div>
-            </div>
+            @endif
 
             <!-- Botão Voltar para Notícias -->
             <div class="voltar-btn-wrapper">
-                <a href="{{ route('public.home') }}/noticias" class="voltar-btn">
-                    <span>Voltar para o Início</span>
+                <a href="{{ route('public.news') }}" class="voltar-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Voltar para Notícias</span>
                 </a>
             </div>
         </div>
     </div>
 </section>
 
+@if(!empty($images))
 <!-- Modal de Foto (Lightbox) -->
 <div class="foto-modal" id="fotoModal" onclick="closeModalOnOverlay(event)">
     <button class="close-modal" onclick="closeModal()">
@@ -552,19 +534,15 @@
     </button>
 
     <div class="foto-counter">
-        <span id="currentPhoto">1</span> / <span id="totalPhotos">5</span>
+        <span id="currentPhoto">1</span> / <span id="totalPhotos">{{ count($images) }}</span>
     </div>
 </div>
 
 <script>
-    // Array de fotos (será gerado dinamicamente pelo backend)
-    const fotos = [
-        '<?= asset('images/arara.jpg') ?>',
-        '<?= asset('images/noticia-cachorro.jpg') ?>',
-        '<?= asset('images/parceiro.jpg') ?>',
-        '<?= asset('images/arara.jpg') ?>',
-        '<?= asset('images/arara.jpg') ?>'
-    ];
+    // Array de fotos gerado dinamicamente
+    const fotos = @json(array_map(function($img) {
+        return asset('storage/' . $img);
+    }, $images));
 
     let currentIndex = 0;
 
@@ -631,5 +609,6 @@
         }
     });
 </script>
+@endif
 
 @endsection

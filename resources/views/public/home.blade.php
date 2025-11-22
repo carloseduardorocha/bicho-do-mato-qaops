@@ -730,34 +730,23 @@
         </div>
         <div class="carousel-wrapper">
             <div class="carousel-slides" id="carouselSlides">
-                <!-- Notícia 1 -->
-                <div class="carousel-slide">
-                    <img src="{{ asset('images/smiley-woman-playing-shelter-with-dog-waiting-be-adopted.jpg') }}" alt="Semana de Adoção" class="slide-image">
-                    <div class="slide-content">
-                        <div class="slide-badge">SEMANA DE ADOÇÃO</div>
-                        <p class="slide-text">A ONG Bicho do Mato realizará um evento especial de adoção nos dias 08, 09 e 10 de agosto, em seu espaço oficial. Será uma oportunidade única para quem deseja transformar vidas e encontrar um novo melhor amigo.</p>
-                    </div>
-                </div>
+                @foreach ($news as $item)
+                    @php
+                        // Pega a primeira imagem do JSON
+                        $imgs  = !empty($item['images']) ? json_decode($item['images'], true) : [];
+                        $image = $imgs[0];
+                    @endphp
 
-                <!-- Notícia 2 -->
-                {{-- @foreach($noticias as $noticia) --}}
-                <div class="carousel-slide">
-                    <img src="{{ asset('images/smiley-woman-playing-shelter-with-dog-waiting-be-adopted.jpg') }}" alt="Campanha de Vacinação" class="slide-image">
-                    <div class="slide-content">
-                        <div class="slide-badge">CAMPANHA DE VACINAÇÃO</div>
-                        <p class="slide-text">Nos dias 15 e 16 de agosto realizaremos uma campanha de vacinação gratuita para cães e gatos. Traga seu pet e garanta a proteção contra diversas doenças. Todos são bem-vindos!</p>
+                    <div class="carousel-slide">
+                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $item['title'] }}" class="slide-image">
+                        <div class="slide-content">
+                            <div class="slide-badge">{{ strtoupper($item['title']) }}</div>
+                            <p class="slide-text">
+                                {{ Str::limit($item['description'], 300) }}
+                            </p>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Notícia 3 -->
-                <div class="carousel-slide">
-                    <img src="{{ asset('images/smiley-woman-playing-shelter-with-dog-waiting-be-adopted.jpg') }}" alt="Busca por Voluntários" class="slide-image">
-                    <div class="slide-content">
-                        <div class="slide-badge">SEJA VOLUNTÁRIO</div>
-                        <p class="slide-text">Estamos em busca de pessoas que queiram dedicar algumas horas por semana para ajudar no cuidado dos animais. Não é necessária experiência, apenas amor pelos bichinhos!</p>
-                    </div>
-                </div>
-                {{-- @endforeach --}}
+                @endforeach
             </div>
         </div>
         
@@ -783,27 +772,19 @@
         </div>
         <div class="depoimentos-wrapper">
             <div class="depoimentos-grid">
-                <!-- Depoimento 1 -->
-                {{-- @foreach($depoimentos as $depoimento) --}}
-                <div class="depoimento-card">
-                    <div class="depoimento-avatar">
-                        <img src="{{ asset('images/smiley-woman-playing-shelter-with-dog-waiting-be-adopted.jpg') }}" alt="Gilberto Souza">
-                    </div>
-                    <h3 class="depoimento-nome">Gilberto Souza</h3>
-                    <p class="depoimento-texto">Graças ao app, encontrei o melhor amigo que eu poderia ter!</p>
-                </div>
 
-                <!-- Depoimento 2 -->
-                <div class="depoimento-card">
-                    <div class="depoimento-avatar">
-                        <img src="{{ asset('images/smiley-woman-playing-shelter-with-dog-waiting-be-adopted.jpg') }}" alt="Cintia da Silva">
+                @foreach ($testimonials as $item)
+                    <div class="depoimento-card">
+                        <div class="depoimento-avatar">
+                            <img src="{{ asset('storage/' . ($item['image'])) }}" alt="{{ $item['name'] }}">
+                        </div>
+                        <h3 class="depoimento-nome">{{ $item['name'] }}</h3>
+                        <p class="depoimento-texto">{{ $item['description'] }}</p>
                     </div>
-                    <h3 class="depoimento-nome">Cintia da Silva</h3>
-                    <p class="depoimento-texto">Adotar o Thor foi uma das melhores decisões da minha vida. O aplicativo facilitou todo o processo...</p>
-                </div>
-                {{-- @endforeach --}}
+                @endforeach
+
             </div>
-            
+
             <button class="ver-mais-btn" onclick="window.location.href='<?= route('public.testimonials') ?>'">
                 Ver Mais
             </button>
@@ -821,47 +802,13 @@
             <div class="parceiros-carousel-container">
                 <div class="parceiros-carousel-wrapper">
                     <div class="parceiros-grid" id="parceirosSlides">
-                        <!-- Parceiro 1 -->
-                        {{-- @foreach($parceiros as $parceiro) --}}
-                        <div class="parceiro-card">
-                            <div class="parceiro-logo">
-                                <img src="{{ asset('images/logo-bicho-do-mato.png') }}" alt="Instagram">
+                        @foreach($partners as $partner)
+                            <div class="parceiro-card">
+                                <div class="parceiro-logo">
+                                    <img src="{{ asset('storage/' . ($partner['image'])) }}" alt="{{ $partner['name'] }}">
+                                </div>
                             </div>
-                        </div>
-
-                        <!-- Parceiro 2 -->
-                        <div class="parceiro-card">
-                            <div class="parceiro-logo">
-                                <img src="{{ asset('images/logo-bicho-do-mato-marrom.png') }}" alt="Instagram">
-                            </div>
-                        </div>
-
-                        <!-- Parceiro 3 -->
-                        <div class="parceiro-card">
-                            <div class="parceiro-logo">
-                                <img src="{{ asset('images/logo-bicho-do-mato-verde.png') }}" alt="Instagram">
-                            </div>
-                        </div>
-                        <div class="parceiro-card">
-                            <div class="parceiro-logo">
-                                <img src="{{ asset('images/logo-bicho-do-mato.png') }}" alt="Instagram">
-                            </div>
-                        </div>
-
-                        <!-- Parceiro 2 -->
-                        <div class="parceiro-card">
-                            <div class="parceiro-logo">
-                                <img src="{{ asset('images/logo-bicho-do-mato-marrom.png') }}" alt="Instagram">
-                            </div>
-                        </div>
-
-                        <!-- Parceiro 3 -->
-                        <div class="parceiro-card">
-                            <div class="parceiro-logo">
-                                <img src="{{ asset('images/logo-bicho-do-mato-verde.png') }}" alt="Instagram">
-                            </div>
-                        </div>
-                        {{-- @endforeach --}}
+                        @endforeach
                     </div>
                 </div>
                 <button class="ver-mais-btn" onclick="window.location.href='<?= route('public.partners') ?>'">
@@ -970,12 +917,30 @@
 
     function showParceiros() {
         updateParceirosVisiveis();
-        
+
         const parceirosContainer = document.getElementById('parceirosSlides');
         const cardWidth = parceiros[0].offsetWidth;
         const gap = 40;
+
+        // Se o total de parceiros for menor que os visíveis, centraliza
+        if (totalParceiros <= parceirosVisiveis) {
+            const totalWidth = totalParceiros * cardWidth + (totalParceiros - 1) * gap;
+            const containerWidth = parceirosContainer.offsetWidth;
+            const offset = (containerWidth - totalWidth) / 2;
+            parceirosContainer.style.transform = `translateX(${offset}px)`;
+            return;
+        }
+
+        // Se houver apenas 1 parceiro visível (em telas pequenas), centraliza
+        if (parceirosVisiveis === 1) {
+            const containerWidth = parceirosContainer.offsetWidth;
+            const offset = (cardWidth / 2 - containerWidth / 2) * -1; // centraliza
+            parceirosContainer.style.transform = `translateX(${offset}px)`;
+            return;
+        }
+
+        // Loop normal
         const offset = currentParceiro * (cardWidth + gap);
-        
         parceirosContainer.style.transform = `translateX(-${offset}px)`;
     }
 

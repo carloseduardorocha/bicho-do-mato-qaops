@@ -66,14 +66,16 @@
     /* Grid de Notícias */
     .noticias-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 40px;
         margin: 60px auto 60px;
+        justify-content: center;
     }
 
     .noticia-card {
         background: rgba(47, 82, 51, 0.85);
         border-radius: 20px;
+        flex: 0 0 380px;
         padding: 0;
         box-shadow: 0 15px 50px rgba(0,0,0,0.4);
         overflow: hidden;
@@ -81,7 +83,6 @@
         display: flex;
         flex-direction: column;
     }
-
     .noticia-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 20px 60px rgba(0,0,0,0.5);
@@ -224,6 +225,7 @@
     @media (max-width: 1300px) {
         .noticias-grid {
             grid-template-columns: repeat(2, 1fr);
+            justify-content: center;
         }
     }
 
@@ -232,6 +234,7 @@
             grid-template-columns: 1fr;
             max-width: 700px;
             margin: 60px auto 60px;
+            justify-content: center;
         }
     }
 
@@ -326,107 +329,50 @@
 
         <!-- Grid de Notícias -->
         <div class="noticias-grid">
-            {{-- @foreach($noticias as $noticia) --}}
-            
-            <!-- Notícia 1 -->
-            <div class="noticia-card">
-                <div class="noticia-image-wrapper">
-                    <img src="{{ asset('images/noticia-cachorro.jpg') }}" alt="Bicho-preguiça resgatado" class="noticia-image">
+            @foreach($news as $item)
+                @php
+                    // Pega a primeira imagem do JSON
+                    $imgs  = !empty($item['images']) ? json_decode($item['images'], true) : [];
+                    $image = $imgs[0];
+                @endphp
+                <div class="noticia-card">
+                    <div class="noticia-image-wrapper">
+                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $item->title }}" class="noticia-image">
+                    </div>
+                    <div class="noticia-content">
+                        <h3 class="noticia-titulo">{{ $item->title }}</h3>
+                        <p class="noticia-descricao">{{ Str::limit($item->description, 150) }}</p>
+                        <a href="{{ route('public.show-news', $item->id) }}" class="noticia-btn">Ver Notícia</a>
+                    </div>
                 </div>
-                <div class="noticia-content">
-                    <h3 class="noticia-titulo">Bicho-preguiça é salvo após tentativa de atravessar estrada.</h3>
-                    <p class="noticia-descricao">{{ Str::limit('Um bicho-preguiça foi resgatado por voluntários da ONG Bicpho do Mato ao tentar cruzar uma rodovia...', 150) }}</p>
-                    <a href="{{ route('public.show-news', 1) }}" class="noticia-btn">Ver Notícia</a>
-                </div>
-            </div>
-
-            <!-- Notícia 2 -->
-            <div class="noticia-card">
-                <div class="noticia-image-wrapper">
-                    <img src="{{ asset('images/noticia-cachorro.jpg') }}" alt="Guaxinim resgatado" class="noticia-image">
-                </div>
-                <div class="noticia-content">
-                    <h3 class="noticia-titulo">Guaxinim aparece em área urbana e é resgatado com segurança.</h3>
-                    <p class="noticia-descricao">{{ Str::limit('Moradores se surpreenderam ao encontrar um guaxinim em plena área urbana. A equipe ambiental...', 150) }}</p>
-                    <a href="{{ route('public.show-news', 1) }}" class="noticia-btn">Ver Notícia</a>
-                </div>
-            </div>
-
-            <!-- Notícia 3 -->
-            <div class="noticia-card">
-                <div class="noticia-image-wrapper">
-                    <img src="{{ asset('images/noticia-cachorro.jpg') }}" alt="Cães resgatados" class="noticia-image">
-                </div>
-                <div class="noticia-content">
-                    <h3 class="noticia-titulo">Cães resgatados em situação de maus-tratos ganham novo lar.</h3>
-                    <p class="noticia-descricao">{{ Str::limit('Após operação de resgate, 12 cães encontraram lares amorosos durante um mutirão de adoção. Voluntários...', 150) }}</p>
-                    <a href="{{ route('public.show-news', 1) }}" class="noticia-btn">Ver Notícia</a>
-                </div>
-            </div>
-
-            <!-- Notícia 4 -->
-            <div class="noticia-card">
-                <div class="noticia-image-wrapper">
-                    <img src="{{ asset('images/noticia-cachorro.jpg') }}" alt="Onça pintada" class="noticia-image">
-                </div>
-                <div class="noticia-content">
-                    <h3 class="noticia-titulo">Onça ferida recebe tratamento e será reintroduzida à natureza.</h3>
-                    <p class="noticia-descricao">{{ Str::limit('Uma jovem onça-pintada foi encontrada com ferimentos na pata em área rural. Após...', 150) }}</p>
-                    <a href="{{ route('public.show-news', 1) }}" class="noticia-btn">Ver Notícia</a>
-                </div>
-            </div>
-
-            <!-- Notícia 5 -->
-            <div class="noticia-card">
-                <div class="noticia-image-wrapper">
-                    <img src="{{ asset('images/noticia-cachorro.jpg') }}" alt="Onça pintada" class="noticia-image">
-                </div>
-                <div class="noticia-content">
-                    <h3 class="noticia-titulo">Onça ferida recebe tratamento e será reintroduzida à natureza.</h3>
-                    <p class="noticia-descricao">{{ Str::limit('Uma jovem onça-pintada foi encontrada com ferimentos na pata em área rural. Após...', 150) }}</p>
-                    <a href="{{ route('public.show-news', 1) }}" class="noticia-btn">Ver Notícia</a>
-                </div>
-            </div>
-
-            <!-- Notícia 6 -->
-            <div class="noticia-card">
-                <div class="noticia-image-wrapper">
-                    <img src="{{ asset('images/noticia-cachorro.jpg') }}" alt="Onça pintada" class="noticia-image">
-                </div>
-                <div class="noticia-content">
-                    <h3 class="noticia-titulo">Onça ferida recebe tratamento e será reintroduzida à natureza.</h3>
-                    <p class="noticia-descricao">{{ Str::limit('Uma jovem onça-pintada foi encontrada com ferimentos na pata em área rural. Após...', 150) }}</p>
-                    <a href="{{ route('public.show-news', 1) }}" class="noticia-btn">Ver Notícia</a>
-                </div>
-            </div>
-
-            {{-- @endforeach --}}
+            @endforeach
         </div>
 
         <!-- Paginação -->
-        <div class="pagination-wrapper">
-            {{-- {{ $noticias->links() }} --}}
-            
-            <!-- Exemplo de paginação (será substituído pelo Laravel) -->
+         <div class="pagination-wrapper">
             <ul class="pagination">
-                <li class="disabled">
-                    <span>&laquo;</span>
-                </li>
-                <li class="active">
-                    <span>1</span>
-                </li>
-                <li>
-                    <a href="#">2</a>
-                </li>
-                <li>
-                    <a href="#">3</a>
-                </li>
-                <li>
-                    <a href="#">4</a>
-                </li>
-                <li>
-                    <a href="#">&raquo;</a>
-                </li>
+                {{-- Previous --}}
+                @if ($news->onFirstPage())
+                    <li class="disabled"><span>&laquo;</span></li>
+                @else
+                    <li><a href="{{ $news->previousPageUrl() }}">&laquo;</a></li>
+                @endif
+
+                {{-- Números --}}
+                @foreach ($news->getUrlRange(1, $news->lastPage()) as $page => $url)
+                    @if ($page == $news->currentPage())
+                        <li class="active"><span>{{ $page }}</span></li>
+                    @else
+                        <li><a href="{{ $url }}">{{ $page }}</a></li>
+                    @endif
+                @endforeach
+
+                {{-- Next --}}
+                @if ($news->hasMorePages())
+                    <li><a href="{{ $news->nextPageUrl() }}">&raquo;</a></li>
+                @else
+                    <li class="disabled"><span>&raquo;</span></li>
+                @endif
             </ul>
         </div>
     </div>

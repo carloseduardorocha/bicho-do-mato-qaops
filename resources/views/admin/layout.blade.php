@@ -158,10 +158,6 @@
             z-index: 1060;
         }
 
-        .dropdown-menu-custom:hover {
-            background: var(--bege);
-        }
-
         .dropdown-menu-custom.show {
             opacity: 1;
             visibility: visible;
@@ -426,6 +422,58 @@
             color: var(--marrom);
         }
 
+        /* Paginação Customizada */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-wrap: wrap;
+        }
+
+        .pagination li {
+            display: inline-block;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 12px;
+            background: #f5e8d1; /* cor de fundo clara */
+            color: var(--marrom); /* cor do texto */
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .pagination a:hover {
+            background: #f3a632; /* cor de destaque */
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(243,166,50,0.4);
+        }
+
+        .pagination .active span {
+            background: #f3a632;
+            color: #fff;
+            box-shadow: 0 6px 15px rgba(243,166,50,0.4);
+        }
+
+        .pagination .disabled span {
+            background: rgba(245,232,209,0.4);
+            color: rgba(47,82,51,0.4);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .navbar-menu {
@@ -508,6 +556,10 @@
             </button>
             
             <div class="dropdown-menu-custom" id="dropdownMenu">
+                <a href="{{ route('admin.users.index') }}" class="dropdown-item-custom">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários</span>
+                </a>
                 <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                     @csrf
                     <button type="submit" class="dropdown-item-custom">
@@ -527,6 +579,7 @@
             <li><a href="{{ route('admin.partners.index') }}"><i class="fas fa-handshake"></i> Parceiros</a></li>
             <li><a href="{{ route('admin.news.index') }}"><i class="fas fa-newspaper"></i> Notícias</a></li>
             <li><a href="{{ route('admin.testimonials.index') }}"><i class="fas fa-comments"></i> Depoimentos</a></li>
+            <li><a href="{{ route('admin.users.index') }}" class="dropdown-item-custom"><i class="fas fa-users"></i> Usuários</a></li>
 
             <li>
                 <form action="{{ route('logout') }}" method="POST" style="width: 100%; margin:0;">
