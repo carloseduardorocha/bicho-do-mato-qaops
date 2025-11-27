@@ -88,7 +88,7 @@
     .carousel-wrapper {
         overflow: hidden;
         border-radius: 20px;
-        background: #fff;
+        background: #f5e8d1;
         box-shadow: 0 15px 50px rgba(0,0,0,0.4);
     }
 
