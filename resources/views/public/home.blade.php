@@ -573,13 +573,29 @@
     }
 
     @media (max-width: 920px) {
-      .parceiro-logo {
-          max-width: 260px;
-          max-height: 260px;
-      }
-      .redes-grid {
-          grid-template-columns: repeat(2, 1fr);
-      }
+        .parceiro-logo {
+            max-width: 260px;
+            max-height: 260px;
+        }
+        .redes-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .slide-badge {
+            left: 0;
+            position: relative !important;
+            margin: 0 auto 0 auto !important;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 0;
+            white-space: normal !important;
+            width: 100%;
+            text-align: center;
+        }
+
+        .slide-text {
+            margin-top: 0 !important;
+        }
     }
     @media (max-width: 768px) {
         .section {
@@ -598,14 +614,8 @@
             height: 280px;
         }
 
-        .slide-content {
-            padding: 25px 30px;
-        }
-
         .slide-badge {
-            left: 30px;
             font-size: 0.9rem;
-            padding: 8px 25px;
         }
 
         .slide-title {
