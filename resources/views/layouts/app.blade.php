@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title', 'ONG Bicho do Mato')</title>
 
-    <!-- {{-- Vite --}} -->
-    <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
-
     {{-- Favicon padrão --}}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
