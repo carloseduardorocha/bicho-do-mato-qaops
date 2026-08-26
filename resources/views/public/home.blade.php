@@ -784,9 +784,15 @@
             <div class="depoimentos-grid">
 
                 @foreach ($testimonials as $item)
+                    @php
+                        $testimonialImage = $item['image'] ?? null;
+                        $testimonialImage = filled($testimonialImage) && (string) $testimonialImage !== '0'
+                            ? $testimonialImage
+                            : 'testimonials/foto_de_perfil.png';
+                    @endphp
                     <div class="depoimento-card">
                         <div class="depoimento-avatar">
-                            <img src="{{ asset('storage/' . ($item['image'])) }}" alt="{{ $item['name'] }}">
+                            <img src="{{ asset('storage/' . $testimonialImage) }}" alt="{{ $item['name'] }}">
                         </div>
                         <h3 class="depoimento-nome">{{ $item['name'] }}</h3>
                         <p class="depoimento-texto">{{ Str::limit($item['description'], 100) }}</p>
