@@ -631,7 +631,7 @@
 
             <div class="qrcode-wrapper">
                 <p class="pix-label">PIX</p>
-                <img src="{{ asset('images/pix/qrcode-pix.png') }}" alt="QR Code PIX" class="qrcode-image">
+                <img src="{{ asset('images/pix/qrcode-pix.jpeg') }}" alt="QR Code PIX" class="qrcode-image">
                 <p class="pix-label" style="margin-bottom: 0;">CNPJ: 29.714.162/0001-73 </p>
                 <p class="pix-sub-label">Santuário de Defesa Animal Bicho do Mato</p>
                 <hr class="linha-verde-responsiva">
