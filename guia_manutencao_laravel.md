@@ -91,6 +91,8 @@ php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 php artisan optimize
+sudo chown -R www-data:www-data storage bootstrap/cache
+sudo chmod -R ug+rwX storage bootstrap/cache
 sudo systemctl restart php8.4-fpm
 sudo systemctl reload nginx
 ```
