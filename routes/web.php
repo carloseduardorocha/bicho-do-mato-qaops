@@ -63,5 +63,4 @@ Route::middleware(['auth.custom'])->prefix('admin')->name('admin.')->group(funct
 });
 
 // Inclusões finais
-require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
