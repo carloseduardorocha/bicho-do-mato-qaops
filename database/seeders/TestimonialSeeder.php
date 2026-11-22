@@ -18,21 +18,21 @@ class TestimonialSeeder extends Seeder
 
         $testimonials = [
             [
-                Testimonial::NAME        => 'Ana Paula Silva',
+                Testimonial::NAME => 'Ana Paula Silva',
                 Testimonial::DESCRIPTION => 'Adotei minha gatinha através da ONG e foi a melhor decisão da minha vida! A equipe é super atenciosa e acompanhou todo o processo. Minha Mel está super feliz e saudável. Recomendo muito o trabalho desta ONG!',
-                Testimonial::IMAGE       => 'testimonials/foto_de_perfil.png',
+                Testimonial::IMAGE => 'testimonials/foto_de_perfil.png',
                 Testimonial::IS_APPROVED => true,
             ],
             [
-                Testimonial::NAME        => 'Carlos Eduardo Santos',
+                Testimonial::NAME => 'Carlos Eduardo Santos',
                 Testimonial::DESCRIPTION => 'Trabalho maravilhoso! Resgataram meu cachorro que estava perdido e cuidaram dele até eu encontrá-lo. A dedicação e o amor pelos animais são inspiradores. Gratidão eterna!',
-                Testimonial::IMAGE       => 'testimonials/foto_de_perfil.png',
+                Testimonial::IMAGE => 'testimonials/foto_de_perfil.png',
                 Testimonial::IS_APPROVED => true,
             ],
             [
-                Testimonial::NAME        => 'Mariana Costa',
+                Testimonial::NAME => 'Mariana Costa',
                 Testimonial::DESCRIPTION => 'Sou voluntária da ONG há 2 anos e posso afirmar que é um trabalho sério e comprometido com o bem-estar animal. Já ajudamos centenas de animais a encontrarem um lar. Vale muito a pena fazer parte dessa família!',
-                Testimonial::IMAGE       => 'testimonials/foto_de_perfil.png',
+                Testimonial::IMAGE => 'testimonials/foto_de_perfil.png',
                 Testimonial::IS_APPROVED => true,
             ],
         ];
@@ -53,7 +53,7 @@ class TestimonialSeeder extends Seeder
         $destPath = storage_path('app/public/testimonials/foto_de_perfil.png');
 
         // Criar diretório se não existir
-        if (!File::exists(storage_path('app/public/testimonials'))) {
+        if (! File::exists(storage_path('app/public/testimonials'))) {
             File::makeDirectory(storage_path('app/public/testimonials'), 0755, true);
         }
 
@@ -62,7 +62,7 @@ class TestimonialSeeder extends Seeder
             File::copy($sourcePath, $destPath);
             $this->command->info('  → Imagem de depoimento copiada para storage');
         } else {
-            $this->command->warn('  ⚠ Imagem padrão não encontrada em: ' . $sourcePath);
+            $this->command->warn('  ⚠ Imagem padrão não encontrada em: '.$sourcePath);
         }
     }
 }

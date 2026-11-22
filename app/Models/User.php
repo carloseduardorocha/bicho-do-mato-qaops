@@ -21,14 +21,21 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    public const ID                = 'id';
-    public const NAME              = 'name';
-    public const EMAIL             = 'email';
+    public const ID = 'id';
+
+    public const NAME = 'name';
+
+    public const EMAIL = 'email';
+
     public const EMAIL_VERIFIED_AT = 'email_verified_at';
-    public const PASSWORD          = 'password';
-    public const REMEMBER_TOKEN    = 'remember_token';
-    public const CREATED_AT        = 'created_at';
-    public const UPDATED_AT        = 'updated_at';
+
+    public const PASSWORD = 'password';
+
+    public const REMEMBER_TOKEN = 'remember_token';
+
+    public const CREATED_AT = 'created_at';
+
+    public const UPDATED_AT = 'updated_at';
 
     /**
      * The attributes that are mass assignable.
@@ -54,7 +61,7 @@ class User extends Authenticatable
     {
         return [
             self::EMAIL_VERIFIED_AT => 'datetime',
-            self::PASSWORD          => 'hashed',
+            self::PASSWORD => 'hashed',
         ];
     }
 

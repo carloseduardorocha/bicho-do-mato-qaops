@@ -28,7 +28,7 @@ class TestimonialController extends Controller
             return view('admin.testimonials.index', compact('testimonials'));
         } catch (\Throwable $e) {
             Log::error('TestimonialController@index failed', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao carregar a lista de depoimentos.');
@@ -50,9 +50,9 @@ class TestimonialController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name'        => 'required|string|max:100',
+                'name' => 'required|string|max:100',
                 'description' => 'required|string|max:500',
-                'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             // Upload de imagem
@@ -67,8 +67,8 @@ class TestimonialController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('TestimonialController@store failed', [
-                'data'  => $request->all(),
-                'error' => $e->getMessage()
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->withInput()->with('error', 'Erro ao criar depoimento.');
@@ -87,8 +87,8 @@ class TestimonialController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('TestimonialController@edit failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->route('admin.testimonials.index')->with('error', 'Depoimento não encontrado.');
@@ -102,9 +102,9 @@ class TestimonialController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name'        => 'required|string|max:100',
+                'name' => 'required|string|max:100',
                 'description' => 'required|string|max:500',
-                'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             // Upload de imagem
@@ -119,9 +119,9 @@ class TestimonialController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('TestimonialController@update failed', [
-                'id'    => $id,
-                'data'  => $request->all(),
-                'error' => $e->getMessage()
+                'id' => $id,
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->withInput()->with('error', 'Erro ao atualizar depoimento.');
@@ -140,8 +140,8 @@ class TestimonialController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('TestimonialController@destroy failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao remover depoimento.');
@@ -161,7 +161,7 @@ class TestimonialController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('TestimonialController@moderate failed', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao carregar depoimentos pendentes.');
@@ -180,8 +180,8 @@ class TestimonialController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('TestimonialController@approve failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao aprovar depoimento.');
@@ -200,8 +200,8 @@ class TestimonialController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('TestimonialController@reject failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao rejeitar depoimento.');

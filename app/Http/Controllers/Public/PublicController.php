@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Public;
 
+use App\Http\Controllers\Controller;
 use App\Services\NewsService;
 use App\Services\PartnerService;
 use App\Services\TestimonialService;
-
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 
 class PublicController extends Controller
 {
     protected NewsService $news_service;
+
     protected TestimonialService $testimonial_service;
+
     protected PartnerService $partner_service;
 
     public function __construct(NewsService $news_service, TestimonialService $testimonial_service, PartnerService $partner_service)
@@ -28,14 +29,14 @@ class PublicController extends Controller
      */
     public function home()
     {
-        $partners     = $this->partner_service->getAll();
-        $news         = $this->news_service->getPaginated(5);
+        $partners = $this->partner_service->getAll();
+        $news = $this->news_service->getPaginated(5);
         $testimonials = $this->testimonial_service->getPaginated(2);
 
         return view('public.home', [
-            'news'         => $news,
+            'news' => $news,
             'testimonials' => $testimonials,
-            'partners'     => $partners,
+            'partners' => $partners,
         ]);
     }
 
@@ -82,13 +83,13 @@ class PublicController extends Controller
     public function storeTestimonial(Request $request)
     {
         $validated = $request->validate([
-            'nome'        => 'required|string|max:100',
-            'descricao'   => 'required|string|max:500',
-            'foto'        => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'nome' => 'required|string|max:100',
+            'descricao' => 'required|string|max:500',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $validated = [
-            'name'        => $validated['nome'],
+            'name' => $validated['nome'],
             'description' => $validated['descricao'],
         ];
 
@@ -99,12 +100,14 @@ class PublicController extends Controller
 
         try {
             $this->testimonial_service->create($validated);
+
             return redirect()->back()->with('success', 'Depoimento enviado com sucesso! Ele será exibido no site assim que um administrador aprovar.');
         } catch (\Throwable $e) {
             Log::error('Failed to store testimonial', [
                 'data' => $request->all(),
                 'error' => $e->getMessage(),
             ]);
+
             return redirect()->back()->withInput()->with('error', 'Erro ao enviar depoimento.');
         }
     }
@@ -128,11 +131,11 @@ class PublicController extends Controller
     {
         try {
             $news = $this->news_service->getById($id);
-            
+
             return view('public.show-news', [
                 'news' => $news,
             ]);
-            
+
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return redirect()->route('public.news')->with('error', 'Notícia não encontrada.');
         } catch (\Throwable $e) {
@@ -140,6 +143,7 @@ class PublicController extends Controller
                 'id' => $id,
                 'error' => $e->getMessage(),
             ]);
+
             return redirect()->route('public.news')->with('error', 'Erro ao carregar notícia.');
         }
     }

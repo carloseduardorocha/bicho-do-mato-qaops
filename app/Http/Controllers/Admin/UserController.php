@@ -29,7 +29,7 @@ class UserController extends Controller
             return view('admin.users.index', compact('users'));
         } catch (\Throwable $e) {
             Log::error('UserController@index failed', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao carregar a lista de usuários.');
@@ -51,17 +51,17 @@ class UserController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name'     => 'required|string|max:255',
-                'email'    => 'required|email|max:255|unique:users,email',
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255|unique:users,email',
                 'password' => ['required', 'confirmed', Password::min(8)],
             ], [
-                'name.required'     => 'O nome é obrigatório.',
-                'email.required'    => 'O email é obrigatório.',
-                'email.email'       => 'Formato de email inválido.',
-                'email.unique'      => 'Este email já está cadastrado.',
+                'name.required' => 'O nome é obrigatório.',
+                'email.required' => 'O email é obrigatório.',
+                'email.email' => 'Formato de email inválido.',
+                'email.unique' => 'Este email já está cadastrado.',
                 'password.required' => 'A senha é obrigatória.',
                 'password.confirmed' => 'As senhas não coincidem.',
-                'password.min'      => 'A senha deve ter no mínimo 8 caracteres.',
+                'password.min' => 'A senha deve ter no mínimo 8 caracteres.',
             ]);
 
             $this->user_service->create($validated);
@@ -70,8 +70,8 @@ class UserController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('UserController@store failed', [
-                'data'  => $request->all(),
-                'error' => $e->getMessage()
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->withInput()->with('error', 'Erro ao criar usuário.');
@@ -90,8 +90,8 @@ class UserController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('UserController@edit failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->route('admin.users.index')->with('error', 'Usuário não encontrado.');
@@ -105,16 +105,16 @@ class UserController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name'     => 'required|string|max:255',
-                'email'    => 'required|email|max:255|unique:users,email,' . $id,
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255|unique:users,email,'.$id,
                 'password' => ['nullable', 'confirmed', Password::min(8)],
             ], [
-                'name.required'      => 'O nome é obrigatório.',
-                'email.required'     => 'O email é obrigatório.',
-                'email.email'        => 'Formato de email inválido.',
-                'email.unique'       => 'Este email já está cadastrado.',
+                'name.required' => 'O nome é obrigatório.',
+                'email.required' => 'O email é obrigatório.',
+                'email.email' => 'Formato de email inválido.',
+                'email.unique' => 'Este email já está cadastrado.',
                 'password.confirmed' => 'As senhas não coincidem.',
-                'password.min'       => 'A senha deve ter no mínimo 8 caracteres.',
+                'password.min' => 'A senha deve ter no mínimo 8 caracteres.',
             ]);
 
             // Remove password do array se estiver vazio
@@ -129,9 +129,9 @@ class UserController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('UserController@update failed', [
-                'id'    => $id,
-                'data'  => $request->all(),
-                'error' => $e->getMessage()
+                'id' => $id,
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->withInput()->with('error', 'Erro ao atualizar usuário.');
@@ -155,8 +155,8 @@ class UserController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('UserController@destroy failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao remover usuário.');

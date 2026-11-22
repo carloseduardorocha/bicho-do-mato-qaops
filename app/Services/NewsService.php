@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Models\News;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class NewsService
 {
@@ -50,10 +50,10 @@ class NewsService
     {
         try {
             $news = News::query()->create([
-                News::TITLE       => $data[News::TITLE]       ?? null,
+                News::TITLE => $data[News::TITLE] ?? null,
                 News::DESCRIPTION => $data[News::DESCRIPTION] ?? null,
-                News::AUTHOR_ID   => $data[News::AUTHOR_ID]   ?? null,
-                News::IMAGES      => $data[News::IMAGES]      ?? null,
+                News::AUTHOR_ID => $data[News::AUTHOR_ID] ?? null,
+                News::IMAGES => $data[News::IMAGES] ?? null,
             ]);
 
             return $news->toArray();
@@ -65,8 +65,8 @@ class NewsService
             }
 
             Log::error('NewsService@create failed', [
-                'data'  => $data,
-                'error' => $e->getMessage()
+                'data' => $data,
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;
@@ -82,10 +82,10 @@ class NewsService
             $news = News::query()->findOrFail($id);
 
             $news->update([
-                News::TITLE       => $data[News::TITLE]       ?? $news->{News::TITLE},
+                News::TITLE => $data[News::TITLE] ?? $news->{News::TITLE},
                 News::DESCRIPTION => $data[News::DESCRIPTION] ?? $news->{News::DESCRIPTION},
-                News::AUTHOR_ID   => $data[News::AUTHOR_ID]   ?? $news->{News::AUTHOR_ID},
-                News::IMAGES      => $data[News::IMAGES]      ?? $news->{News::IMAGES},
+                News::AUTHOR_ID => $data[News::AUTHOR_ID] ?? $news->{News::AUTHOR_ID},
+                News::IMAGES => $data[News::IMAGES] ?? $news->{News::IMAGES},
             ]);
 
             return $news->refresh()->toArray();
@@ -97,8 +97,8 @@ class NewsService
             }
 
             Log::error('NewsService@update failed', [
-                'id'    => $id,
-                'data'  => $data,
+                'id' => $id,
+                'data' => $data,
                 'error' => $e->getMessage(),
             ]);
 
@@ -128,7 +128,7 @@ class NewsService
         } catch (\Throwable $e) {
             Log::error('NewsService@delete failed', [
                 'id' => $id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;
@@ -144,7 +144,7 @@ class NewsService
             $news = News::query()->findOrFail($id);
 
             // Decodificar array de imagens
-            $images = !empty($news->{News::IMAGES}) ? json_decode($news->{News::IMAGES}, true) : [];
+            $images = ! empty($news->{News::IMAGES}) ? json_decode($news->{News::IMAGES}, true) : [];
 
             // Remover a imagem do array
             $updatedImages = array_filter($images, function ($path) use ($imagePath) {
@@ -156,16 +156,16 @@ class NewsService
 
             // Atualizar registro
             $news->update([
-                News::IMAGES => !empty($updatedImages) ? json_encode(array_values($updatedImages)) : null,
+                News::IMAGES => ! empty($updatedImages) ? json_encode(array_values($updatedImages)) : null,
             ]);
 
             return true;
 
         } catch (\Throwable $e) {
             Log::error('NewsService@deleteImageFromNews failed', [
-                'id'         => $id,
+                'id' => $id,
                 'image_path' => $imagePath,
-                'error'      => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;
@@ -174,9 +174,6 @@ class NewsService
 
     /**
      * Delete a single image from storage.
-     *
-     * @param string $imagePath
-     * @return bool
      */
     private function deleteImage(string $imagePath): bool
     {
@@ -184,12 +181,14 @@ class NewsService
             if (Storage::disk('public')->exists($imagePath)) {
                 return Storage::disk('public')->delete($imagePath);
             }
+
             return false;
         } catch (\Throwable $e) {
             Log::warning('Failed to delete news image', [
                 'path' => $imagePath,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
@@ -197,7 +196,6 @@ class NewsService
     /**
      * Delete multiple images from storage (JSON string or array).
      *
-     * @param string|array $imagesData
      * @return int Number of images deleted
      */
     private function deleteMultipleImages(string|array $imagesData): int
@@ -205,8 +203,8 @@ class NewsService
         try {
             // Se vier como string JSON, decodifica
             $images = is_string($imagesData) ? json_decode($imagesData, true) : $imagesData;
-            
-            if (empty($images) || !is_array($images)) {
+
+            if (empty($images) || ! is_array($images)) {
                 return 0;
             }
 
@@ -221,8 +219,9 @@ class NewsService
 
         } catch (\Throwable $e) {
             Log::warning('Failed to delete multiple news images', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return 0;
         }
     }
@@ -248,11 +247,12 @@ class NewsService
             }
 
             Log::info('Cleaned up deleted news images', ['count' => $count]);
+
             return $count;
 
         } catch (\Throwable $e) {
             Log::error('NewsService@cleanupDeletedNewsImages failed', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             throw $e;
         }

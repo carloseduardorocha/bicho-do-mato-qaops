@@ -19,19 +19,19 @@ class PartnerSeeder extends Seeder
 
         $partners = [
             [
-                Partner::NAME  => 'Universidade Federal de Santa Maria',
+                Partner::NAME => 'Universidade Federal de Santa Maria',
                 Partner::IMAGE => 'partners/ufsm_logo.png',
-                Partner::LINK  => 'https://www.ufsm.br',
+                Partner::LINK => 'https://www.ufsm.br',
             ],
             [
-                Partner::NAME  => 'Universidade Federal de Santa Maria',
+                Partner::NAME => 'Universidade Federal de Santa Maria',
                 Partner::IMAGE => 'partners/ufsm_logo.png',
-                Partner::LINK  => 'https://www.ufsm.br',
+                Partner::LINK => 'https://www.ufsm.br',
             ],
             [
-                Partner::NAME  => 'Universidade Federal de Santa Maria',
+                Partner::NAME => 'Universidade Federal de Santa Maria',
                 Partner::IMAGE => 'partners/ufsm_logo.png',
-                Partner::LINK  => 'https://www.ufsm.br',
+                Partner::LINK => 'https://www.ufsm.br',
             ],
         ];
 
@@ -51,7 +51,7 @@ class PartnerSeeder extends Seeder
         $destPath = storage_path('app/public/partners/ufsm_logo.png');
 
         // Criar diretório se não existir
-        if (!File::exists(storage_path('app/public/partners'))) {
+        if (! File::exists(storage_path('app/public/partners'))) {
             File::makeDirectory(storage_path('app/public/partners'), 0755, true);
         }
 
@@ -60,7 +60,7 @@ class PartnerSeeder extends Seeder
             File::copy($sourcePath, $destPath);
             $this->command->info('  → Imagem de parceiro copiada para storage');
         } else {
-            $this->command->warn('  ⚠ Imagem padrão não encontrada em: ' . $sourcePath);
+            $this->command->warn('  ⚠ Imagem padrão não encontrada em: '.$sourcePath);
         }
     }
 }
