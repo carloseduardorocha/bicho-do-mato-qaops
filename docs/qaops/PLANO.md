@@ -12,7 +12,7 @@ Entregáveis: repositório, pipeline, testes, pelo menos 3 quality gates justifi
 
 ## Sistema
 
-Site da ONG Bicho do Mato: páginas públicas (home, notícias, parceiros, depoimentos) e admin com login (CRUD de notícias, parceiros, usuários e depoimentos, e moderação de depoimentos). Usa Laravel 12 com telas em Blade e componentes Vue pontuais (navbar, banner, notícias) montados via Vite, PHP 8.4. As telas Inertia que restam são sobras do starter kit, e a regra de negócio fica em `app/Services/`.
+Site da ONG Bicho do Mato: páginas públicas (home, notícias, parceiros, depoimentos) e admin com login (CRUD de notícias, parceiros, usuários e depoimentos, e moderação de depoimentos). Usa Laravel 12 com telas em Blade (Bootstrap por CDN, sem build de front) e PHP 8.4, e a regra de negócio fica em `app/Services/`.
 
 **Funcionalidade central:** depoimento enviado pelo público (`POST /depoimentos`) e moderado no admin (aprovar ou rejeitar). Só os aprovados aparecem no site.
 
@@ -24,16 +24,16 @@ Site da ONG Bicho do Mato: páginas públicas (home, notícias, parceiros, depoi
 | R2. Visitante sem login acessa o `/admin` | Feature: cada grupo do admin redireciona para o login | Testes |
 | R3. Envio público inválido é aceito (sem nome, arquivo que não é imagem, imagem grande) | Feature `POST /depoimentos`, casos negativos | Testes |
 | R4. CRUD de notícias quebra ou deixa imagem órfã | Feature com `Storage::fake` | Testes + cobertura |
-| R5. Código que não compila ou não sobe | Build do front + boot do Laravel | Build |
-| R6. Bug de tipo ou código fora do padrão | Pint, Larastan, ESLint | Análise estática |
-| R7. Dependência vulnerável ou segredo versionado | `composer audit`, `npm audit`, Gitleaks | Dependências / segredos |
+| R5. Código que não compila ou não sobe | `composer install` + boot do Laravel | Build |
+| R6. Bug de tipo ou código fora do padrão | Pint, Larastan | Análise estática |
+| R7. Dependência vulnerável ou segredo versionado | `composer audit`, Gitleaks | Dependências / segredos |
 
 ## Quality gates
 
 | # | Gate | Critério | Consequência |
 |---|---|---|---|
-| G1 | Build | `composer install`, `npm ci` e `npm run build` sem erro | Bloqueia |
-| G2 | Análise estática | Pint sem diferença, Larastan sem erro novo (baseline aceita os antigos), ESLint sem erro | Bloqueia |
+| G1 | Build | `composer install` sem erro e o Laravel sobe (`php artisan route:list`) | Bloqueia |
+| G2 | Análise estática | Pint sem diferença, Larastan sem erro novo (baseline aceita os antigos) | Bloqueia |
 | G3 | Testes | 100% dos testes passando | Bloqueia |
 | G4 | Cobertura | ≥ X% em `app/Services` (X medido na E3 e justificado) | Bloqueia |
 | G5 | Dependências | Nenhuma vulnerabilidade crítica | Bloqueia |
@@ -43,7 +43,7 @@ A ficha completa de cada gate (critério, justificativa, momento, evidência, co
 
 ## Ferramentas
 
-GitHub Actions + branch protection · PHP 8.4 · Node 22 · PHPUnit 11 com SQLite em memória · PCOV (cobertura) · Laravel Pint · Larastan · ESLint + Prettier · `composer audit` / `npm audit` · Gitleaks · artifacts (JUnit, cobertura em HTML) + resumo do job.
+GitHub Actions + branch protection · PHP 8.4 · PHPUnit 11 com SQLite em memória · PCOV (cobertura) · Laravel Pint · Larastan · `composer audit` · Gitleaks · artifacts (JUnit, cobertura em HTML) + resumo do job.
 
 ## Entregas e andamento
 
@@ -56,6 +56,7 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 - [x] Pint aplicado uma vez no código todo (commit só de estilo)
 - [x] README: como instalar, rodar os testes e as verificações localmente
 - [x] Este plano na `main`
+- [x] Cadastro público (`POST /register`) fechado e front morto do starter kit removido (Inertia, Vue, Vite, npm)
 
 ### E1. Pipeline — Carlos
 - [ ] `.github/workflows/ci.yml` disparado por push e PR na `main`
@@ -90,7 +91,7 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 | Área | Dono |
 |---|---|
 | `.github/`, `phpunit.xml`, `phpstan.neon`, `phpstan-baseline.neon`, `pint.json`, `.gitleaks.toml`, `docs/qaops/gates.md` | Carlos |
-| `composer.json`/`composer.lock`, `package.json`/`package-lock.json` | Carlos |
+| `composer.json`/`composer.lock` | Carlos |
 | `tests/`, `database/factories/`, `docs/qaops/testes.md`, `docs/qaops/experimento.md` | Renato (depois da E0) |
 | `app/`, `routes/`, `resources/`, `database/migrations/` (código de produção) | Compartilhado: só muda depois de combinar com o outro |
 | `docs/qaops/PLANO.md` | Cada um marca só as próprias entregas |
@@ -98,7 +99,7 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 ## Como trabalhamos juntos
 
 1. **Antes de mexer na área do outro, fale com ele.** Se a sua entrega precisa mudar um arquivo do outro ou do código compartilhado, pare e combine antes (mensagem ou comentário no PR). A sessão do Claude não muda esses arquivos sozinha: ela para e pede que a pessoa alinhe com o colega.
-2. **Precisa de uma dependência nova?** Peça ao Carlos (dono do `composer.json` e do `package.json`), para evitar conflito nos lockfiles.
+2. **Precisa de uma dependência nova?** Peça ao Carlos (dono do `composer.json`), para evitar conflito nos lockfiles.
 3. **Achou um bug no código de produção?** Não conserte por conta. Abra uma issue ou comente no PR e combinem quem corrige.
 4. **Comece sempre da `main` atualizada:** `git switch main && git pull`, depois crie a branch.
 5. **Nunca faça push direto na `main`** nem `push --force` em branch que o outro também usa.
