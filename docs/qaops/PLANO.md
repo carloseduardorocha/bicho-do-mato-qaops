@@ -50,12 +50,12 @@ GitHub Actions + branch protection · PHP 8.4 · Node 22 · PHPUnit 11 com SQLit
 Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua branch, o seu PR e um chat novo.
 
 ### E0. Base — Carlos
-- [ ] Dependências instaladas, testes rodando localmente com SQLite em memória
-- [ ] 12 testes quebrados do starter kit corrigidos ou removidos, com o motivo no PR
-- [ ] `HasFactory` nos models `News`, `Partner` e `Testimonial` (libera a E2 sem mexer em `app/`)
-- [ ] Pint aplicado uma vez no código todo (commit só de estilo)
-- [ ] README: como instalar, rodar os testes e as verificações localmente
-- [ ] Este plano na `main`
+- [x] Dependências instaladas, testes rodando localmente com SQLite em memória
+- [x] 12 testes quebrados do starter kit corrigidos ou removidos, com o motivo no PR
+- [x] `HasFactory` nos models `News`, `Partner` e `Testimonial` (libera a E2 sem mexer em `app/`)
+- [x] Pint aplicado uma vez no código todo (commit só de estilo)
+- [x] README: como instalar, rodar os testes e as verificações localmente
+- [x] Este plano na `main`
 
 ### E1. Pipeline — Carlos
 - [ ] `.github/workflows/ci.yml` disparado por push e PR na `main`
@@ -136,12 +136,6 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 - Revisor: o outro integrante. O merge é feito com **"Create a merge commit"**, para manter no histórico da `main` os commits de cada um e os do experimento (falha e correção).
 - A branch é apagada depois do merge.
 
-## Rodar localmente (sem Sail)
+## Rodar localmente
 
-```bash
-docker run --rm -v "$PWD":/app -w /app composer:2 install
-npm ci && npm run build
-docker run --rm -v "$PWD":/app -w /app -e DB_CONNECTION=sqlite -e DB_DATABASE=:memory: php:8.4-cli php artisan test
-```
-
-(A E0 confirma esses comandos e leva a versão final para o README.)
+Instalação, testes e verificações: seção "Tests and checks (without Sail)" do [`Readme.md`](../../Readme.md).
