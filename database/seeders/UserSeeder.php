@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -14,12 +14,12 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $email = 'admin@admin.com';
-        $user  = User::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             User::create([
-                'name'     => 'Admin',
-                'email'    => $email,
+                'name' => 'Admin',
+                'email' => $email,
                 'password' => Hash::make('admin123'),
             ]);
 
@@ -28,12 +28,12 @@ class UserSeeder extends Seeder
         }
 
         $email = 'bug_alarme@hotmail.com';
-        $user  = User::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             User::create([
-                'name'     => 'Bug',
-                'email'    => $email,
+                'name' => 'Bug',
+                'email' => $email,
                 'password' => Hash::make('change-me-in-env'),
             ]);
 

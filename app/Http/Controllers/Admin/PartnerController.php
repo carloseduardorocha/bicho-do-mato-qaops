@@ -28,7 +28,7 @@ class PartnerController extends Controller
             return view('admin.partners.index', compact('partners'));
         } catch (\Throwable $e) {
             Log::error('PartnerController@index failed', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao carregar a lista de parceiros.');
@@ -50,9 +50,9 @@ class PartnerController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name'  => 'required|string|max:100',
+                'name' => 'required|string|max:100',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'link'  => 'nullable|url|max:255',
+                'link' => 'nullable|url|max:255',
             ]);
 
             if ($request->hasFile('image')) {
@@ -66,8 +66,8 @@ class PartnerController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('PartnerController@store failed', [
-                'data'  => $request->all(),
-                'error' => $e->getMessage()
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->withInput()->with('error', 'Erro ao criar parceiro.');
@@ -86,8 +86,8 @@ class PartnerController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('PartnerController@edit failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->route('admin.partners.index')->with('error', 'Parceiro não encontrado.');
@@ -101,9 +101,9 @@ class PartnerController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name'  => 'required|string|max:100',
+                'name' => 'required|string|max:100',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'link'  => 'nullable|url|max:255',
+                'link' => 'nullable|url|max:255',
             ]);
 
             if ($request->hasFile('image')) {
@@ -117,9 +117,9 @@ class PartnerController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('PartnerController@update failed', [
-                'id'    => $id,
-                'data'  => $request->all(),
-                'error' => $e->getMessage()
+                'id' => $id,
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->withInput()->with('error', 'Erro ao atualizar parceiro.');
@@ -138,8 +138,8 @@ class PartnerController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('PartnerController@destroy failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao remover parceiro.');

@@ -21,14 +21,21 @@ class News extends Model
     |--------------------------------------------------------------------------
     */
 
-    public const ID          = 'id';
-    public const TITLE       = 'title';
+    public const ID = 'id';
+
+    public const TITLE = 'title';
+
     public const DESCRIPTION = 'description';
-    public const AUTHOR_ID   = 'author_id';
-    public const IMAGES      = 'images';
-    public const CREATED_AT  = 'created_at';
-    public const UPDATED_AT  = 'updated_at';
-    public const DELETED_AT  = 'deleted_at';
+
+    public const AUTHOR_ID = 'author_id';
+
+    public const IMAGES = 'images';
+
+    public const CREATED_AT = 'created_at';
+
+    public const UPDATED_AT = 'updated_at';
+
+    public const DELETED_AT = 'deleted_at';
 
     /**
      * The attributes that are mass assignable.

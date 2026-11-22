@@ -16,9 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'guest.custom' => \App\Http\Middleware\RedirectIfLoggedIn::class,
-            'auth.custom'  => \App\Http\Middleware\MustBeAuthenticated::class,
+            'auth.custom' => \App\Http\Middleware\MustBeAuthenticated::class,
         ]);
-        
+
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
         $middleware->web(append: [

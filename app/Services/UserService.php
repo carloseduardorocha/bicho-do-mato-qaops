@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
@@ -50,8 +50,8 @@ class UserService
     {
         try {
             $user = User::query()->create([
-                User::NAME     => $data[User::NAME]     ?? null,
-                User::EMAIL    => $data[User::EMAIL]    ?? null,
+                User::NAME => $data[User::NAME] ?? null,
+                User::EMAIL => $data[User::EMAIL] ?? null,
                 User::PASSWORD => isset($data[User::PASSWORD]) ? Hash::make($data[User::PASSWORD]) : null,
             ]);
 
@@ -59,8 +59,8 @@ class UserService
 
         } catch (\Throwable $e) {
             Log::error('UserService@create failed', [
-                'data'  => $data,
-                'error' => $e->getMessage()
+                'data' => $data,
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;
@@ -76,12 +76,12 @@ class UserService
             $user = User::query()->findOrFail($id);
 
             $updateData = [
-                User::NAME  => $data[User::NAME]  ?? $user->{User::NAME},
+                User::NAME => $data[User::NAME] ?? $user->{User::NAME},
                 User::EMAIL => $data[User::EMAIL] ?? $user->{User::EMAIL},
             ];
 
             // Só atualiza a senha se foi fornecida
-            if (isset($data[User::PASSWORD]) && !empty($data[User::PASSWORD])) {
+            if (isset($data[User::PASSWORD]) && ! empty($data[User::PASSWORD])) {
                 $updateData[User::PASSWORD] = Hash::make($data[User::PASSWORD]);
             }
 
@@ -91,8 +91,8 @@ class UserService
 
         } catch (\Throwable $e) {
             Log::error('UserService@update failed', [
-                'id'    => $id,
-                'data'  => $data,
+                'id' => $id,
+                'data' => $data,
                 'error' => $e->getMessage(),
             ]);
 
@@ -113,7 +113,7 @@ class UserService
         } catch (\Throwable $e) {
             Log::error('UserService@delete failed', [
                 'id' => $id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;

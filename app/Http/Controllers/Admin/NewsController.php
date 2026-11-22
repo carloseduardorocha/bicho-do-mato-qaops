@@ -28,7 +28,7 @@ class NewsController extends Controller
             return view('admin.news.index', compact('news'));
         } catch (\Throwable $e) {
             Log::error('NewsController@index failed', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao carregar a lista de notícias.');
@@ -50,10 +50,10 @@ class NewsController extends Controller
     {
         try {
             $validated = $request->validate([
-                'title'       => 'required|string|max:255',
+                'title' => 'required|string|max:255',
                 'description' => 'required|string|max:5000',
-                'images'      => 'nullable|array',
-                'images.*'    => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'images' => 'nullable|array',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             // Upload múltiplo de imagens
@@ -65,7 +65,7 @@ class NewsController extends Controller
                 }
             }
 
-            $validated['images']    = !empty($imagePaths) ? json_encode($imagePaths) : null;
+            $validated['images'] = ! empty($imagePaths) ? json_encode($imagePaths) : null;
             $validated['author_id'] = auth()->id();
 
             $this->news_service->create($validated);
@@ -74,8 +74,8 @@ class NewsController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('NewsController@store failed', [
-                'data'  => $request->all(),
-                'error' => $e->getMessage()
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->withInput()->with('error', 'Erro ao criar notícia.');
@@ -94,8 +94,8 @@ class NewsController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('NewsController@edit failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->route('admin.news.index')->with('error', 'Notícia não encontrada.');
@@ -109,10 +109,10 @@ class NewsController extends Controller
     {
         try {
             $validated = $request->validate([
-                'title'       => 'required|string|max:255',
+                'title' => 'required|string|max:255',
                 'description' => 'required|string|max:5000',
-                'images'      => 'nullable|array',
-                'images.*'    => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'images' => 'nullable|array',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             // Upload de novas imagens
@@ -125,8 +125,8 @@ class NewsController extends Controller
 
                 // Merge com imagens antigas se existirem
                 $news = $this->news_service->getById($id);
-                $oldImages = !empty($news['images']) ? json_decode($news['images'], true) : [];
-                
+                $oldImages = ! empty($news['images']) ? json_decode($news['images'], true) : [];
+
                 // Combinar imagens antigas com novas
                 $allImages = array_merge($oldImages, $newImagePaths);
                 $validated['images'] = json_encode($allImages);
@@ -138,9 +138,9 @@ class NewsController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('NewsController@update failed', [
-                'id'    => $id,
-                'data'  => $request->all(),
-                'error' => $e->getMessage()
+                'id' => $id,
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->withInput()->with('error', 'Erro ao atualizar notícia.');
@@ -159,8 +159,8 @@ class NewsController extends Controller
 
         } catch (\Throwable $e) {
             Log::error('NewsController@destroy failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()->with('error', 'Erro ao remover notícia.');
@@ -181,18 +181,18 @@ class NewsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Imagem removida com sucesso!'
+                'message' => 'Imagem removida com sucesso!',
             ]);
 
         } catch (\Throwable $e) {
             Log::error('NewsController@deleteImage failed', [
-                'id'    => $id,
-                'error' => $e->getMessage()
+                'id' => $id,
+                'error' => $e->getMessage(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Erro ao remover imagem.'
+                'message' => 'Erro ao remover imagem.',
             ], 500);
         }
     }

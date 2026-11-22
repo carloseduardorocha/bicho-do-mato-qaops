@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Models\Partner;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class PartnerService
 {
@@ -35,9 +35,6 @@ class PartnerService
 
     /**
      * Get all partners paginated.
-     *
-     * @param integer $per_page
-     * @return LengthAwarePaginator
      */
     public function getPaginated(int $per_page = 15): LengthAwarePaginator
     {
@@ -53,9 +50,9 @@ class PartnerService
     {
         try {
             $partner = Partner::query()->create([
-                Partner::NAME  => $data[Partner::NAME]  ?? null,
+                Partner::NAME => $data[Partner::NAME] ?? null,
                 Partner::IMAGE => $data[Partner::IMAGE] ?? null,
-                Partner::LINK  => $data[Partner::LINK]  ?? null,
+                Partner::LINK => $data[Partner::LINK] ?? null,
             ]);
 
             return $partner->toArray();
@@ -86,9 +83,9 @@ class PartnerService
 
             // Atualiza os dados
             $partner->update([
-                Partner::NAME  => $data[Partner::NAME]  ?? $partner->{Partner::NAME},
+                Partner::NAME => $data[Partner::NAME] ?? $partner->{Partner::NAME},
                 Partner::IMAGE => $data[Partner::IMAGE] ?? $partner->{Partner::IMAGE},
-                Partner::LINK  => $data[Partner::LINK]  ?? $partner->{Partner::LINK},
+                Partner::LINK => $data[Partner::LINK] ?? $partner->{Partner::LINK},
             ]);
 
             // Se uma nova imagem foi enviada, deleta a antiga
@@ -105,7 +102,7 @@ class PartnerService
             }
 
             Log::error('PartnerService@update failed', [
-                'id'   => $id,
+                'id' => $id,
                 'data' => $data,
                 'error' => $e->getMessage(),
             ]);
@@ -121,7 +118,7 @@ class PartnerService
     {
         try {
             $partner = Partner::query()->findOrFail($id);
-            
+
             return (bool) $partner->delete();
 
         } catch (\Throwable $e) {
@@ -136,9 +133,6 @@ class PartnerService
 
     /**
      * Delete image from storage.
-     *
-     * @param string $imagePath
-     * @return bool
      */
     private function deleteImage(string $imagePath): bool
     {
@@ -146,12 +140,14 @@ class PartnerService
             if (Storage::disk('public')->exists($imagePath)) {
                 return Storage::disk('public')->delete($imagePath);
             }
+
             return false;
         } catch (\Throwable $e) {
             Log::warning('Failed to delete image', [
                 'path' => $imagePath,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
@@ -175,11 +171,12 @@ class PartnerService
             }
 
             Log::info('Cleaned up deleted partners images', ['count' => $count]);
+
             return $count;
 
         } catch (\Throwable $e) {
             Log::error('PartnerService@cleanupDeletedPartnersImages failed', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             throw $e;
         }

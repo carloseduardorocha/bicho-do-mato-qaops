@@ -1,14 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\Public\PublicController;
-
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Public\PublicController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(PublicController::class)->name('public.')->group(function () {
     Route::get('/', 'home')->name('home');

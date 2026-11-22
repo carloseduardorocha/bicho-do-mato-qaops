@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Models\Testimonial;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TestimonialService
 {
@@ -51,9 +51,9 @@ class TestimonialService
     {
         try {
             $testimonial = Testimonial::query()->create([
-                Testimonial::NAME        => $data[Testimonial::NAME]        ?? null,
+                Testimonial::NAME => $data[Testimonial::NAME] ?? null,
                 Testimonial::DESCRIPTION => $data[Testimonial::DESCRIPTION] ?? null,
-                Testimonial::IMAGE       => $data[Testimonial::IMAGE]       ?? null,
+                Testimonial::IMAGE => $data[Testimonial::IMAGE] ?? null,
                 Testimonial::IS_APPROVED => false,
             ]);
 
@@ -66,7 +66,7 @@ class TestimonialService
             }
 
             Log::error('TestimonialService@create failed', [
-                'data'  => $data,
+                'data' => $data,
                 'error' => $e->getMessage(),
             ]);
 
@@ -85,9 +85,9 @@ class TestimonialService
 
             // Atualiza os dados
             $testimonial->update([
-                Testimonial::NAME        => $data[Testimonial::NAME]        ?? $testimonial->{Testimonial::NAME},
+                Testimonial::NAME => $data[Testimonial::NAME] ?? $testimonial->{Testimonial::NAME},
                 Testimonial::DESCRIPTION => $data[Testimonial::DESCRIPTION] ?? $testimonial->{Testimonial::DESCRIPTION},
-                Testimonial::IMAGE       => $data[Testimonial::IMAGE]       ?? $testimonial->{Testimonial::IMAGE},
+                Testimonial::IMAGE => $data[Testimonial::IMAGE] ?? $testimonial->{Testimonial::IMAGE},
                 Testimonial::IS_APPROVED => $data[Testimonial::IS_APPROVED] ?? $testimonial->{Testimonial::IS_APPROVED},
             ]);
 
@@ -105,8 +105,8 @@ class TestimonialService
             }
 
             Log::error('TestimonialService@update failed', [
-                'id'    => $id,
-                'data'  => $data,
+                'id' => $id,
+                'data' => $data,
                 'error' => $e->getMessage(),
             ]);
 
@@ -130,7 +130,7 @@ class TestimonialService
 
         } catch (\Throwable $e) {
             Log::error('TestimonialService@approve failed', [
-                'id'    => $id,
+                'id' => $id,
                 'error' => $e->getMessage(),
             ]);
 
@@ -164,7 +164,7 @@ class TestimonialService
 
         } catch (\Throwable $e) {
             Log::error('TestimonialService@reject failed', [
-                'id'    => $id,
+                'id' => $id,
                 'error' => $e->getMessage(),
             ]);
 
@@ -204,7 +204,7 @@ class TestimonialService
 
         } catch (\Throwable $e) {
             Log::error('TestimonialService@delete failed', [
-                'id'    => $id,
+                'id' => $id,
                 'error' => $e->getMessage(),
             ]);
 
@@ -214,9 +214,6 @@ class TestimonialService
 
     /**
      * Delete image from storage.
-     *
-     * @param string $imagePath
-     * @return bool
      */
     private function deleteImage(string $imagePath): bool
     {
@@ -224,12 +221,14 @@ class TestimonialService
             if (Storage::disk('public')->exists($imagePath)) {
                 return Storage::disk('public')->delete($imagePath);
             }
+
             return false;
         } catch (\Throwable $e) {
             Log::warning('Failed to delete testimonial image', [
                 'path' => $imagePath,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
@@ -257,11 +256,12 @@ class TestimonialService
             }
 
             Log::info('Cleaned up deleted testimonials images', ['count' => $count]);
+
             return $count;
 
         } catch (\Throwable $e) {
             Log::error('TestimonialService@cleanupDeletedTestimonialsImages failed', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             throw $e;
         }
