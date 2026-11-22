@@ -12,7 +12,7 @@ Entregáveis: repositório, pipeline, testes, pelo menos 3 quality gates justifi
 
 ## Sistema
 
-Site da ONG Bicho do Mato: páginas públicas (home, notícias, parceiros, depoimentos) e admin com login (CRUD de notícias, parceiros, usuários e depoimentos, e moderação de depoimentos). Usa Laravel 12, Inertia + Vue, PHP 8.4, e a regra de negócio fica em `app/Services/`.
+Site da ONG Bicho do Mato: páginas públicas (home, notícias, parceiros, depoimentos) e admin com login (CRUD de notícias, parceiros, usuários e depoimentos, e moderação de depoimentos). Usa Laravel 12 com telas em Blade e componentes Vue pontuais (navbar, banner, notícias) montados via Vite, PHP 8.4. As telas Inertia que restam são sobras do starter kit, e a regra de negócio fica em `app/Services/`.
 
 **Funcionalidade central:** depoimento enviado pelo público (`POST /depoimentos`) e moderado no admin (aprovar ou rejeitar). Só os aprovados aparecem no site.
 
