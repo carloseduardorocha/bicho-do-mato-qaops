@@ -21,7 +21,7 @@ Site da ONG Bicho do Mato: páginas públicas (home, notícias, parceiros, depoi
 | Risco | Verificação | Gate |
 |---|---|---|
 | R1. Depoimento não aprovado aparece no site | Unitário do `TestimonialService` + feature `GET /depoimentos` | Testes |
-| R2. Visitante sem login acessa o `/admin` | Feature: cada grupo do admin redireciona para o login | Testes |
+| R2. Visitante sem login acessa o `/admin` ou cria conta | Feature: cada grupo do admin redireciona o visitante (hoje para a home) e `POST /register` responde 404 | Testes |
 | R3. Envio público inválido é aceito (sem nome, arquivo que não é imagem, imagem grande) | Feature `POST /depoimentos`, casos negativos | Testes |
 | R4. CRUD de notícias quebra ou deixa imagem órfã | Feature com `Storage::fake` | Testes + cobertura |
 | R5. Código que não compila ou não sobe | `composer install` + boot do Laravel | Build |
