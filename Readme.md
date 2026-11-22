@@ -1,66 +1,49 @@
-To install the project on your development machine, follow these steps:
+# Bicho do Mato
 
-## 📌 Project Setup and Dependencies
+Website of the Bicho do Mato NGO: public pages (home, news, partners, testimonials) and an admin area. Laravel 12 + Blade, PHP 8.4.
 
-### 1 - Clone the project repository
-
-Run the following command in your terminal to clone the project:
+## Run the app (Sail)
 
 ```bash
-# Clone the repository via SSH
-git clone https://github.com/UFSM-FW-Projetos-DCEx-2025/bicho-do-mato.git
+git clone git@github.com:carloseduardorocha/bicho-do-mato-qaops.git
+cd bicho-do-mato-qaops
+cp .env.example .env
+docker run --rm -v "$PWD":/app -w /app composer:2 install --ignore-platform-req=php
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate:fresh --seed
+./vendor/bin/sail npm ci
+./vendor/bin/sail npm run build
 ```
 
-### 2 - Set up the environment
+The app runs at <http://localhost>.
 
-Navigate to the project directory by running the following command:
+## Tests and checks (without Sail)
 
-```bash
-cd bicho-do-mato/
-```
+Only Docker and Node 22 are needed. Run from the project root.
 
-Duplicate the `.env.example` file and rename the copy to `.env`:
+First time:
 
 ```bash
 cp .env.example .env
+docker run --rm -v "$PWD":/app -w /app composer:2 install --ignore-platform-req=php
+docker run --rm -v "$PWD":/app -w /app php:8.4-cli php artisan key:generate
+npm ci
 ```
 
-### 3 - Install the composer:
-```ssh
-composer install
-```
+- `composer:2` ships a newer PHP than the lockfile allows, hence `--ignore-platform-req=php`. The code itself runs on PHP 8.4.
+- Tests always use SQLite in memory (forced in `phpunit.xml`), whatever database `.env` points to.
 
-### 4 - Start the Docker development container
+| Check | Command |
+|---|---|
+| Tests | `docker run --rm -v "$PWD":/app -w /app php:8.4-cli php artisan test` |
+| PHP code style (Pint) | `docker run --rm -v "$PWD":/app -w /app php:8.4-cli vendor/bin/pint --test` |
+| Front-end build | `npm run build` |
+| Front-end lint (ESLint) | `npx eslint .` |
+| Front-end format (Prettier) | `npm run format:check` |
+| PHP dependencies | `docker run --rm -v "$PWD":/app -w /app composer:2 audit` |
+| JS dependencies | `npm audit` |
 
-Start the container by running the following command:
+To fix code style instead of only checking it: `vendor/bin/pint` (same container) and `npm run format`.
 
-```bash
-./vendor/bin/sail up -d
-```
-
-### 5 - Run migrations, generate the application key and build the frontend
-
-Inside the project folder, run the following steps:
-
-#### 5.1 - Run migrations and seed the database
-
-```bash
-./vendor/bin/sail artisan migrate:fresh --seed
-```
-
-#### 5.2 - Generate the application key
-
-```bash
-./vendor/bin/sail artisan key:generate
-```
-
-#### 5.3 - Run frontend
-
-```bash
-./vendor/bin/sail npm install && npm run build && npm run dev
-```
-
-## ⚡ Ready!
-
-Your application should now be running under the following domain:
-<a href="http://localhost" target="_blank">http://localhost</a>
+On Linux, add `-u "$(id -u):$(id -g)"` after `docker run --rm` so the generated files belong to your user.
