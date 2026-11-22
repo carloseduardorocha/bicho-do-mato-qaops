@@ -1,6 +1,6 @@
 # bicho-do-mato-qaops
 
-Site da ONG Bicho do Mato (Laravel 12 + Inertia/Vue), usado como base do trabalho final de DevOps/QAOps de Qualidade de Software (UFSM), feito em dupla por Carlos e Renato.
+Site da ONG Bicho do Mato (Laravel 12, Blade + componentes Vue via Vite), usado como base do trabalho final de DevOps/QAOps de Qualidade de Software (UFSM), feito em dupla por Carlos e Renato.
 
 - Antes de qualquer tarefa, leia `docs/qaops/PLANO.md`: plano, entregas, donos de cada área, regras de colaboração e convenções de branch, commit e PR. Siga o que está lá.
 - Dúvidas sobre o que o trabalho pede: `docs/qaops/enunciado.pdf` (cite a seção).
