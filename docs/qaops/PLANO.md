@@ -59,11 +59,11 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 - [x] Cadastro público (`POST /register`) fechado e front morto do starter kit removido (Inertia, Vue, Vite, npm)
 
 ### E1. Pipeline — Carlos
-- [ ] `.github/workflows/ci.yml` disparado por push e PR na `main`
-- [ ] Jobs: dependências e build (G1), análise estática (G2), testes (G3), dependências (G5)
-- [ ] Larastan instalado, com nível e baseline justificados
-- [ ] Artifacts (JUnit, logs) e resumo do job com a tabela dos gates
-- [ ] Branch protection na `main`: PR obrigatório, checks obrigatórios, 1 aprovação
+- [x] `.github/workflows/ci.yml` disparado por push e PR na `main`
+- [x] Jobs: dependências e build (G1), análise estática (G2), testes (G3), dependências (G5)
+- [x] Larastan instalado, com nível e baseline justificados (nível 5, 4 erros antigos na baseline; justificativa no PR #4)
+- [x] Artifacts (JUnit, logs) e resumo do job com a tabela dos gates
+- [ ] Branch protection na `main`: PR obrigatório, checks obrigatórios, 1 aprovação (ligada logo após o merge do PR #4; marcar no PR da E3)
 
 ### E2. Testes — Renato
 - [x] Factories de `News`, `Partner` e `Testimonial`
