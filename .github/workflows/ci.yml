@@ -114,13 +114,19 @@ jobs:
       - uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup-php-app
+        with:
+          coverage: pcov
 
-      - name: Run tests (PHPUnit, SQLite in memory)
+      # Coverage is measured in the same run (PCOV, scope = <source> in
+      # phpunit.xml, app/Services). The G4 job reads reports/clover.xml.
+      - name: Run tests (PHPUnit, SQLite in memory, PCOV coverage)
         id: phpunit
         continue-on-error: true
         run: |
           mkdir -p reports
-          php artisan test --log-junit reports/junit.xml 2>&1 | tee ci-out/phpunit.log
+          php artisan test --log-junit reports/junit.xml \
+            --coverage-clover reports/clover.xml \
+            --coverage-html reports/coverage-html 2>&1 | tee ci-out/phpunit.log
 
       - name: Gate decision
         run: |
@@ -167,6 +173,75 @@ jobs:
             reports/junit.xml
             ci-out/
           if-no-files-found: ignore
+
+      - name: Upload coverage report (HTML + Clover)
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: g4-coverage-report
+          path: |
+            reports/clover.xml
+            reports/coverage-html/
+          if-no-files-found: ignore
+
+  coverage:
+    name: G4 Coverage
+    needs: tests
+    # Runs even when a test failed: coverage is a separate gate with its own verdict.
+    if: always() && needs.tests.result != 'cancelled'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v7
+        continue-on-error: true
+        with:
+          name: g4-coverage-report
+          path: reports
+
+      # Thresholds and their justification: docs/qaops/gates.md (G4).
+      - name: Gate decision (line coverage per file in app/Services)
+        run: |
+          python3 - <<'PY'
+          import os, sys, xml.etree.ElementTree as ET
+          BLOCK = {"TestimonialService.php": 90, "NewsService.php": 80}  # services of R1, R3, R4
+          TOTAL = 65                                                     # floor for all of app/Services
+          out = open(os.environ["GITHUB_STEP_SUMMARY"], "a")
+          out.write("### G4 Coverage (lines, app/Services)\n")
+          try:
+              root = ET.parse("reports/clover.xml").getroot()
+          except Exception as e:
+              print(f"::error title=G4 Coverage::No coverage report ({e}). The test run crashed before finishing; see the G3 Tests job.")
+              out.write("❌ No coverage report: the test run crashed.\n")
+              sys.exit(1)
+          pct = lambda c, s: 100.0 * c / s if s else 100.0
+          out.write("| File | Lines | Coverage | Rule | Result |\n|---|---|---|---|---|\n")
+          fail, cov_all, stm_all = [], 0, 0
+          for f in sorted(root.iter("file"), key=lambda f: f.get("name")):
+              m = f.find("metrics")
+              name = os.path.basename(f.get("name"))
+              stm, cov = int(m.get("statements")), int(m.get("coveredstatements"))
+              cov_all += cov; stm_all += stm
+              p = pct(cov, stm)
+              if name in BLOCK:
+                  ok = p >= BLOCK[name]
+                  rule, res = f"≥ {BLOCK[name]}% (blocks)", "✅" if ok else "❌"
+                  if not ok:
+                      fail.append(name)
+                      print(f"::error title=G4 Coverage ({name})::{p:.1f}% of lines covered, minimum is {BLOCK[name]}%. Add tests for the new or changed code in {name}.")
+              else:
+                  rule, res = "report only", "⚠️ below the total floor" if p < TOTAL else "ℹ️"
+                  if p < TOTAL:
+                      print(f"::warning title=G4 Coverage ({name})::{p:.1f}% of lines covered (not blocking: outside risks R1-R4).")
+              out.write(f"| `{name}` | {cov}/{stm} | {p:.1f}% | {rule} | {res} |\n")
+          total = pct(cov_all, stm_all)
+          ok = total >= TOTAL
+          out.write(f"| **Total** | {cov_all}/{stm_all} | **{total:.1f}%** | ≥ {TOTAL}% (blocks) | {'✅' if ok else '❌'} |\n")
+          out.write("\nFull report: artifact `g4-coverage-report` (open `coverage-html/index.html`).\n")
+          if not ok:
+              fail.append("total")
+              print(f"::error title=G4 Coverage (total)::{total:.1f}% of lines covered in app/Services, minimum is {TOTAL}%.")
+          if fail:
+              sys.exit(1)
+          PY
 
   dependencies:
     name: G5 Dependencies
@@ -220,10 +295,62 @@ jobs:
           path: ci-out/
           if-no-files-found: ignore
 
+  secrets:
+    name: G6 Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # whole history, not only the last commit
+
+      - name: Gitleaks (all commits)
+        id: gitleaks
+        continue-on-error: true
+        run: |
+          mkdir -p ci-out
+          docker run --rm -v "$PWD":/repo:ro -v "$PWD/ci-out":/out ghcr.io/gitleaks/gitleaks:v8.30.1 \
+            git /repo --redact --no-banner --exit-code 1 \
+            --report-format json --report-path /out/gitleaks.json 2>&1 | tee ci-out/gitleaks.log
+
+      - name: Gate decision
+        run: |
+          f=ci-out/gitleaks.json
+          {
+            echo "### G6 Secrets"
+            echo "$(grep -oE '[0-9]+ commits scanned' ci-out/gitleaks.log || echo 'commits scanned: unknown') (whole history, Gitleaks v8.30.1, values redacted)"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if ! jq -e 'type == "array"' "$f" > /dev/null 2>&1; then
+            echo "::error title=G6 Secrets::Gitleaks did not produce a report. See the 'Gitleaks' step."
+            echo "❌ No Gitleaks report." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          n=$(jq length "$f")
+          if [ "$n" -eq 0 ] && [ "${{ steps.gitleaks.outcome }}" = success ]; then
+            echo "✅ No secrets found." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          {
+            echo "❌ $n finding(s):"
+            echo "| Rule | File | Line | Commit |"
+            echo "|---|---|---|---|"
+            jq -r '.[] | "| \(.RuleID) | `\(.File)` | \(.StartLine) | \(.Commit[0:7]) |"' "$f"
+          } >> "$GITHUB_STEP_SUMMARY"
+          jq -r '.[] | "::error file=\(.File),line=\(.StartLine),title=G6 secret (\(.RuleID))::Possible secret in commit \(.Commit[0:7]). Revoke it, remove it from history, or mark a false positive in .gitleaksignore."' "$f"
+          echo "::error title=G6 Secrets::$n possible secret(s) in the git history. Merge into main is blocked."
+          exit 1
+
+      - name: Upload Gitleaks report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: g6-secrets-report
+          path: ci-out/
+          if-no-files-found: ignore
+
   gates:
     name: Quality gates
     if: always()
-    needs: [build, static-analysis, tests, dependencies]
+    needs: [build, static-analysis, tests, coverage, dependencies, secrets]
     runs-on: ubuntu-latest
     steps:
       - name: Gate table
@@ -236,9 +363,9 @@ jobs:
             echo "| G1 Build | composer install e o Laravel sobe (route:list) | $(verdict '${{ needs.build.result }}') |"
             echo "| G2 Análise estática | Pint sem diferença, Larastan nível 5 sem erro novo | $(verdict '${{ needs.static-analysis.result }}') |"
             echo "| G3 Testes | 100% dos testes passando | $(verdict '${{ needs.tests.result }}') |"
-            echo "| G4 Cobertura | (E3) | ⏳ pendente |"
+            echo "| G4 Cobertura | linhas em app/Services: TestimonialService ≥ 90%, NewsService ≥ 80%, total ≥ 65% | $(verdict '${{ needs.coverage.result }}') |"
             echo "| G5 Dependências | nenhuma vulnerabilidade crítica | $(verdict '${{ needs.dependencies.result }}') |"
-            echo "| G6 Segredos | (E3) | ⏳ pendente |"
+            echo "| G6 Segredos | Gitleaks sem achados no histórico todo | $(verdict '${{ needs.secrets.result }}') |"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Decision
