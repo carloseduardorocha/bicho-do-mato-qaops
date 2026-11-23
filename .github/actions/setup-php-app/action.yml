@@ -5,6 +5,9 @@ inputs:
   install:
     description: Run composer install after setting up PHP.
     default: "true"
+  coverage:
+    description: Coverage driver for setup-php (none or pcov). Only the tests job needs pcov.
+    default: "none"
 
 runs:
   using: composite
@@ -14,7 +17,7 @@ runs:
       with:
         php-version: "8.4"
         extensions: mbstring, pdo_sqlite, sqlite3, fileinfo, gd
-        coverage: none
+        coverage: ${{ inputs.coverage }}
         tools: composer:v2
 
     - name: Locate Composer cache

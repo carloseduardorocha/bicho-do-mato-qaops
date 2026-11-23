@@ -39,7 +39,11 @@ docker run --rm -v "$PWD":/app -w /app php:8.4-cli php artisan key:generate
 | Static analysis (Larastan, level 5 + baseline) | `docker run --rm -v "$PWD":/app -w /app php:8.4-cli vendor/bin/phpstan analyse --memory-limit=1G` |
 | App boots (all routes load) | `docker run --rm -v "$PWD":/app -w /app php:8.4-cli php artisan route:list` |
 | Dependencies | `docker run --rm -v "$PWD":/app -w /app composer:2 audit` |
+| Coverage (PCOV, `app/Services`, HTML in `reports/coverage-html`) | `docker run --rm -v "$PWD":/app -w /app php:8.4-cli sh -c 'pecl install pcov && docker-php-ext-enable pcov && php artisan test --coverage-html reports/coverage-html'` |
+| Secrets (Gitleaks, whole git history) | `docker run --rm -v "$PWD":/repo:ro ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo --redact` |
 
 To fix code style instead of only checking it: `vendor/bin/pint` (same container).
 
-On Linux, add `-u "$(id -u):$(id -g)"` after `docker run --rm` so the generated files belong to your user.
+On Linux, add `-u "$(id -u):$(id -g)"` after `docker run --rm` so the generated files belong to your user (except for coverage: installing PCOV needs root).
+
+The coverage thresholds and the reason for each gate are in [`docs/qaops/gates.md`](docs/qaops/gates.md).
