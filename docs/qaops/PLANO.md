@@ -76,10 +76,10 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 - [x] `docs/qaops/gates.md` com a ficha de cada gate
 
 ### E4. Experimento — Renato faz, Carlos revisa
-- [ ] Run aprovado registrado
-- [ ] PR com alteração controlada (remover o filtro `is_approved` no `TestimonialService`): pipeline vermelho, merge bloqueado
-- [ ] Correção no mesmo PR: pipeline verde
-- [ ] `docs/qaops/experimento.md` com os links dos 3 runs, onde e por que falhou, e o tempo de cada run
+- [x] Run aprovado registrado
+- [x] PR com alteração controlada (remover o filtro `is_approved` no `TestimonialService`): pipeline vermelho, merge bloqueado
+- [x] Correção no mesmo PR: pipeline verde
+- [x] `docs/qaops/experimento.md` com os links dos 3 runs, onde e por que falhou, e o tempo de cada run
 
 ### E5. Relatório e defesa — os dois
 - [ ] Carlos: seções 1, 4, 6 e 8 (feedback, tempo, custo de manutenção)
