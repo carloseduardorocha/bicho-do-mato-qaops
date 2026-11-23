@@ -12,6 +12,12 @@ on:
 permissions:
   contents: read
 
+# Explicit bash runs steps with -eo pipefail, so `command | tee log` fails
+# when the command fails (the default `bash -e` keeps only tee's status).
+defaults:
+  run:
+    shell: bash
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
