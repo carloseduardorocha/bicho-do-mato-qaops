@@ -17,6 +17,10 @@ docker run --rm -v "$PWD":/app -w /app composer:2 install --ignore-platform-req=
 
 The app runs at <http://localhost>. Admin users are created in `/admin/users` (there is no public sign-up).
 
+- `.env.example` is ready for Sail: the database is the `mysql` container, with local-only credentials.
+- If port 80 or 3306 is taken, set `APP_PORT` and `FORWARD_DB_PORT` in `.env` (e.g. `8080` and `3307`) before `sail up`.
+- Stop with `./vendor/bin/sail down` (add `-v` to also drop the database).
+
 ## Tests and checks (without Sail)
 
 Only Docker is needed. Run from the project root.
