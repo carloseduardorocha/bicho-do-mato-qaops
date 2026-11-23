@@ -1,0 +1,242 @@
+# Quality pipeline (docs/qaops/PLANO.md). Each gate is its own job so the
+# PR checks show exactly which gate failed; the "Quality gates" job writes
+# the approved/rejected table to the run summary.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: G1 Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install dependencies (composer install)
+        uses: ./.github/actions/setup-php-app
+
+      - name: Boot Laravel and load all routes
+        run: |
+          if ! php artisan route:list --ansi 2>&1 | tee ci-out/route-list.log; then
+            echo "::error title=G1 Build::Laravel failed to boot (php artisan route:list). See the step log or the g1-build-logs artifact."
+            exit 1
+          fi
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "### G1 Build"
+            echo "- composer install: ${{ job.status == 'success' && 'ok' || 'see log' }}"
+            echo "- Routes loaded: $(grep -cE '^\s+(GET|POST|PUT|PATCH|DELETE|ANY)' ci-out/route-list.log 2>/dev/null || echo 0)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: g1-build-logs
+          path: ci-out/
+          if-no-files-found: ignore
+
+  static-analysis:
+    name: G2 Static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-php-app
+
+      - name: Code style (Pint --test)
+        id: pint
+        continue-on-error: true
+        run: vendor/bin/pint --test -v 2>&1 | tee ci-out/pint.log
+
+      - name: Larastan (level 5, new errors only)
+        id: larastan
+        continue-on-error: true
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G --error-format=table 2>&1 | tee ci-out/larastan.log
+
+      - name: Annotate Larastan errors
+        if: steps.larastan.outcome == 'failure'
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G --error-format=github || true
+
+      - name: Gate decision
+        run: |
+          pint="${{ steps.pint.outcome }}"; larastan="${{ steps.larastan.outcome }}"
+          {
+            echo "### G2 Static analysis"
+            echo "| Check | Result |"
+            echo "|---|---|"
+            echo "| Pint (code style) | $([ "$pint" = success ] && echo '✅ no differences' || echo '❌ files out of style') |"
+            echo "| Larastan level 5 | $([ "$larastan" = success ] && echo '✅ no new errors' || echo '❌ new errors (baseline: phpstan-baseline.neon)') |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          fail=0
+          if [ "$pint" != success ]; then
+            echo "::error title=G2 Pint::Code style differs from Laravel Pint. Run 'vendor/bin/pint' locally and commit. Files listed in the 'Code style' step."
+            fail=1
+          fi
+          if [ "$larastan" != success ]; then
+            echo "::error title=G2 Larastan::Larastan found errors that are not in the baseline. See the 'Larastan' step or the annotations on the changed files."
+            fail=1
+          fi
+          exit $fail
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: g2-static-analysis-logs
+          path: ci-out/
+          if-no-files-found: ignore
+
+  tests:
+    name: G3 Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-php-app
+
+      - name: Run tests (PHPUnit, SQLite in memory)
+        id: phpunit
+        continue-on-error: true
+        run: |
+          mkdir -p reports
+          php artisan test --log-junit reports/junit.xml 2>&1 | tee ci-out/phpunit.log
+
+      - name: Gate decision
+        run: |
+          python3 - <<'PY'
+          import os, sys, xml.etree.ElementTree as ET
+          out = open(os.environ["GITHUB_STEP_SUMMARY"], "a")
+          out.write("### G3 Tests\n")
+          try:
+              root = ET.parse("reports/junit.xml").getroot()
+          except Exception as e:
+              print(f"::error title=G3 Tests::No JUnit report produced ({e}). The test run crashed before finishing; see the 'Run tests' step.")
+              out.write("❌ No JUnit report: the test run crashed.\n")
+              sys.exit(1)
+          suite = root if root.tag == "testsuite" else root.find("testsuite")
+          tests, fails, errs, skips = (int(suite.get(k, 0)) for k in ("tests", "failures", "errors", "skipped"))
+          time = float(suite.get("time", 0))
+          out.write("| Tests | Passed | Failed | Errors | Skipped | Time |\n|---|---|---|---|---|---|\n")
+          out.write(f"| {tests} | {tests - fails - errs - skips} | {fails} | {errs} | {skips} | {time:.1f}s |\n")
+          broken = []
+          for case in root.iter("testcase"):
+              problem = case.find("failure")
+              if problem is None:
+                  problem = case.find("error")
+              if problem is not None:
+                  name = f"{case.get('class')}::{case.get('name')}"
+                  msg = (problem.text or problem.get("message") or "").strip().splitlines()
+                  first = msg[0] if msg else "failed"
+                  broken.append(name)
+                  path = os.path.relpath(case.get("file") or ".", os.environ.get("GITHUB_WORKSPACE", os.getcwd()))
+                  print(f"::error file={path},line={case.get('line','1')},title=G3 failed test::{name}: {first}")
+          if broken:
+              out.write("\nFailed tests:\n" + "".join(f"- `{b}`\n" for b in broken))
+          if fails or errs or tests == 0 or "${{ steps.phpunit.outcome }}" != "success":
+              print(f"::error title=G3 Tests::{fails + errs} of {tests} tests failed. Details in the 'Run tests' step and the g3-tests-junit artifact.")
+              sys.exit(1)
+          PY
+
+      - name: Upload JUnit report and logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: g3-tests-junit
+          path: |
+            reports/junit.xml
+            ci-out/
+          if-no-files-found: ignore
+
+  dependencies:
+    name: G5 Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-php-app
+        with:
+          install: "false"
+
+      - name: composer audit (composer.lock)
+        run: |
+          mkdir -p ci-out
+          composer audit --locked --abandoned=ignore 2>&1 | tee ci-out/composer-audit.log || true
+          composer audit --locked --abandoned=ignore --format=json > ci-out/composer-audit.json || true
+
+      - name: Gate decision (block on critical)
+        run: |
+          f=ci-out/composer-audit.json
+          if ! jq -e '.advisories' "$f" > /dev/null 2>&1; then
+            echo "::error title=G5 Dependencies::composer audit did not produce a report. See the 'composer audit' step."
+            exit 1
+          fi
+          # $p is a jq variable, not a shell one
+          # shellcheck disable=SC2016
+          adv='[.advisories | to_entries[] | .key as $p | .value[] | {pkg: $p, sev: (.severity // "unknown"), cve: (.cve // .advisoryId), title, link}]'
+          count() { jq "$adv | map(select(.sev == \"$1\")) | length" "$f"; }
+          crit=$(count critical); high=$(count high); med=$(count medium); low=$(count low)
+          {
+            echo "### G5 Dependencies"
+            echo "| Critical | High | Medium | Low |"
+            echo "|---|---|---|---|"
+            echo "| $crit | $high | $med | $low |"
+            echo
+            echo "Rule: block on **critical**; high is reported as a warning."
+            jq -r "$adv | map(select(.sev == \"critical\" or .sev == \"high\")) | .[] | \"- **\(.sev)** \`\(.pkg)\` \(.cve): \(.title)\"" "$f"
+          } >> "$GITHUB_STEP_SUMMARY"
+          jq -r "$adv | map(select(.sev == \"high\")) | .[] | \"::warning title=G5 high (\(.pkg))::\(.cve): \(.title)\"" "$f"
+          if [ "$crit" -gt 0 ]; then
+            jq -r "$adv | map(select(.sev == \"critical\")) | .[] | \"::error title=G5 critical vulnerability (\(.pkg))::\(.cve): \(.title) \(.link)\"" "$f"
+            echo "::error title=G5 Dependencies::$crit critical vulnerability(ies) in composer.lock. Update the affected package(s) within the same major and run the tests."
+            exit 1
+          fi
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: g5-dependencies-audit
+          path: ci-out/
+          if-no-files-found: ignore
+
+  gates:
+    name: Quality gates
+    if: always()
+    needs: [build, static-analysis, tests, dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gate table
+        run: |
+          verdict() { case "$1" in success) echo "✅ aprovado";; failure) echo "❌ reprovado";; cancelled) echo "⚪ cancelado";; *) echo "⚪ $1";; esac; }
+          {
+            echo "## Quality gates"
+            echo "| Gate | Critério | Resultado |"
+            echo "|---|---|---|"
+            echo "| G1 Build | composer install e o Laravel sobe (route:list) | $(verdict '${{ needs.build.result }}') |"
+            echo "| G2 Análise estática | Pint sem diferença, Larastan nível 5 sem erro novo | $(verdict '${{ needs.static-analysis.result }}') |"
+            echo "| G3 Testes | 100% dos testes passando | $(verdict '${{ needs.tests.result }}') |"
+            echo "| G4 Cobertura | (E3) | ⏳ pendente |"
+            echo "| G5 Dependências | nenhuma vulnerabilidade crítica | $(verdict '${{ needs.dependencies.result }}') |"
+            echo "| G6 Segredos | (E3) | ⏳ pendente |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Decision
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: |
+          echo "::error title=Quality gates::At least one gate failed. Merge into main is blocked. See the table in the run summary."
+          exit 1
