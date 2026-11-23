@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\TestimonialService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class TestimonialController extends Controller
 {
@@ -65,6 +66,8 @@ class TestimonialController extends Controller
 
             return redirect()->route('admin.testimonials.index')->with('success', 'Depoimento criado com sucesso!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error('TestimonialController@store failed', [
                 'data' => $request->all(),
@@ -117,6 +120,8 @@ class TestimonialController extends Controller
 
             return redirect()->route('admin.testimonials.index')->with('success', 'Depoimento atualizado com sucesso!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error('TestimonialController@update failed', [
                 'id' => $id,

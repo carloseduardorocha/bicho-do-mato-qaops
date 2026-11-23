@@ -142,8 +142,6 @@ class NewsServiceTest extends TestCase
 
     public function test_failed_update_keeps_the_images_the_news_already_had(): void
     {
-        $this->markTestSkipped('BUG-1: a failed NewsService::update() also deletes the images the news already had.');
-
         $news = $this->newsWithStoredImages(['news/old.png']);
         Storage::disk('public')->put('news/new.png', 'x');
 
@@ -222,8 +220,6 @@ class NewsServiceTest extends TestCase
 
     public function test_deleting_an_image_never_touches_files_of_other_records(): void
     {
-        $this->markTestSkipped('BUG-2: NewsService::deleteImageFromNews() deletes any file of the public disk.');
-
         $news = $this->newsWithStoredImages(['news/a.png']);
         $this->newsWithStoredImages(['news/other.png']);
 

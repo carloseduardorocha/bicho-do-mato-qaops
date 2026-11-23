@@ -38,7 +38,7 @@ Route::middleware(['auth.custom'])->prefix('admin')->name('admin.')->group(funct
         Route::get('/{id}/edit', 'edit')->name('edit');
         Route::put('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'destroy')->name('destroy');
-        Route::get('/pending', 'pending')->name('pending');
+        Route::get('/pending', 'moderate')->name('pending');
         Route::get('/moderate', 'moderate')->name('moderate');
         Route::post('/{id}/approve', 'approve')->name('approve');
         Route::post('/{id}/reject', 'reject')->name('reject');

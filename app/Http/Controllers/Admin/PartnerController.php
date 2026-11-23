@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\PartnerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class PartnerController extends Controller
 {
@@ -64,6 +65,8 @@ class PartnerController extends Controller
 
             return redirect()->route('admin.partners.index')->with('success', 'Parceiro criado com sucesso!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error('PartnerController@store failed', [
                 'data' => $request->all(),
@@ -115,6 +118,8 @@ class PartnerController extends Controller
 
             return redirect()->route('admin.partners.index')->with('success', 'Parceiro atualizado com sucesso!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error('PartnerController@update failed', [
                 'id' => $id,

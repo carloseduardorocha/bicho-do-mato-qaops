@@ -106,8 +106,6 @@ class TestimonialModerationTest extends TestCase
 
     public function test_pending_route_lists_testimonials_waiting_for_moderation(): void
     {
-        $this->markTestSkipped('BUG-5: the admin.testimonials.pending route has no method in TestimonialController.');
-
         $this->get('/admin/testimonials/pending')->assertOk();
     }
 }

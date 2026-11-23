@@ -78,8 +78,11 @@ class NewsService
      */
     public function update(int $id, array $data): array
     {
+        $currentImages = [];
+
         try {
             $news = News::query()->findOrFail($id);
+            $currentImages = $this->decodeImages($news->{News::IMAGES});
 
             $news->update([
                 News::TITLE => $data[News::TITLE] ?? $news->{News::TITLE},
@@ -91,9 +94,9 @@ class NewsService
             return $news->refresh()->toArray();
 
         } catch (\Throwable $e) {
-            // Se falhar e novas imagens foram enviadas, deleta elas
+            // Se falhar, deleta só as imagens novas: as atuais continuam no registro
             if (isset($data[News::IMAGES])) {
-                $this->deleteMultipleImages($data[News::IMAGES]);
+                $this->deleteMultipleImages(array_diff($this->decodeImages($data[News::IMAGES]), $currentImages));
             }
 
             Log::error('NewsService@update failed', [
@@ -137,6 +140,8 @@ class NewsService
 
     /**
      * Delete a single image from news.
+     *
+     * @return bool False when the image does not belong to the news
      */
     public function deleteImageFromNews(int $id, string $imagePath): bool
     {
@@ -144,7 +149,12 @@ class NewsService
             $news = News::query()->findOrFail($id);
 
             // Decodificar array de imagens
-            $images = ! empty($news->{News::IMAGES}) ? json_decode($news->{News::IMAGES}, true) : [];
+            $images = $this->decodeImages($news->{News::IMAGES});
+
+            // Só apaga arquivos que pertencem a esta notícia
+            if (! in_array($imagePath, $images, true)) {
+                return false;
+            }
 
             // Remover a imagem do array
             $updatedImages = array_filter($images, function ($path) use ($imagePath) {
@@ -170,6 +180,16 @@ class NewsService
 
             throw $e;
         }
+    }
+
+    /**
+     * Image paths as a list (accepts the stored JSON string or an array).
+     */
+    private function decodeImages(string|array|null $imagesData): array
+    {
+        $images = is_string($imagesData) ? json_decode($imagesData, true) : $imagesData;
+
+        return is_array($images) ? $images : [];
     }
 
     /**
@@ -201,15 +221,8 @@ class NewsService
     private function deleteMultipleImages(string|array $imagesData): int
     {
         try {
-            // Se vier como string JSON, decodifica
-            $images = is_string($imagesData) ? json_decode($imagesData, true) : $imagesData;
-
-            if (empty($images) || ! is_array($images)) {
-                return 0;
-            }
-
             $count = 0;
-            foreach ($images as $imagePath) {
+            foreach ($this->decodeImages($imagesData) as $imagePath) {
                 if ($this->deleteImage($imagePath)) {
                     $count++;
                 }
