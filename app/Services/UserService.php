@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -59,7 +60,7 @@ class UserService
 
         } catch (\Throwable $e) {
             Log::error('UserService@create failed', [
-                'data' => $data,
+                'data' => Arr::except($data, User::PASSWORD),
                 'error' => $e->getMessage(),
             ]);
 
@@ -92,7 +93,7 @@ class UserService
         } catch (\Throwable $e) {
             Log::error('UserService@update failed', [
                 'id' => $id,
-                'data' => $data,
+                'data' => Arr::except($data, User::PASSWORD),
                 'error' => $e->getMessage(),
             ]);
 

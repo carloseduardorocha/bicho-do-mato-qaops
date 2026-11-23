@@ -7,6 +7,7 @@ use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -68,9 +69,11 @@ class UserController extends Controller
 
             return redirect()->route('admin.users.index')->with('success', 'Usuário criado com sucesso!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error('UserController@store failed', [
-                'data' => $request->all(),
+                'data' => $request->except(['password', 'password_confirmation']),
                 'error' => $e->getMessage(),
             ]);
 
@@ -127,10 +130,12 @@ class UserController extends Controller
 
             return redirect()->route('admin.users.index')->with('success', 'Usuário atualizado com sucesso!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error('UserController@update failed', [
                 'id' => $id,
-                'data' => $request->all(),
+                'data' => $request->except(['password', 'password_confirmation']),
                 'error' => $e->getMessage(),
             ]);
 
