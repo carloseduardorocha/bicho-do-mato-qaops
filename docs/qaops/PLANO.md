@@ -35,7 +35,7 @@ Site da ONG Bicho do Mato: páginas públicas (home, notícias, parceiros, depoi
 | G1 | Build | `composer install` sem erro e o Laravel sobe (`php artisan route:list`) | Bloqueia |
 | G2 | Análise estática | Pint sem diferença, Larastan sem erro novo (baseline aceita os antigos) | Bloqueia |
 | G3 | Testes | 100% dos testes passando | Bloqueia |
-| G4 | Cobertura | ≥ X% em `app/Services` (X medido na E3 e justificado) | Bloqueia |
+| G4 | Cobertura | Linhas em `app/Services`: `TestimonialService` ≥ 90%, `NewsService` ≥ 80%, total ≥ 65% (medido na E3, justificado em `gates.md`) | Bloqueia (User e Partner só alertam) |
 | G5 | Dependências | Nenhuma vulnerabilidade crítica | Bloqueia |
 | G6 | Segredos | Gitleaks sem achados | Bloqueia |
 
@@ -63,7 +63,7 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 - [x] Jobs: dependências e build (G1), análise estática (G2), testes (G3), dependências (G5)
 - [x] Larastan instalado, com nível e baseline justificados (nível 5, 4 erros antigos na baseline; justificativa no PR #4)
 - [x] Artifacts (JUnit, logs) e resumo do job com a tabela dos gates
-- [ ] Branch protection na `main`: PR obrigatório, checks obrigatórios, 1 aprovação (ligada logo após o merge do PR #4; marcar no PR da E3)
+- [x] Branch protection na `main`: PR obrigatório, checks obrigatórios, 1 aprovação (ligada logo após o merge do PR #4; G4 e G6 entram nos checks obrigatórios na E3)
 
 ### E2. Testes — Renato
 - [x] Factories de `News`, `Partner` e `Testimonial`
@@ -71,9 +71,9 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 - [x] `docs/qaops/testes.md`: tabela risco → teste → tipo, com justificativa do que ficou de fora
 
 ### E3. Gates finais — Carlos
-- [ ] Cobertura com PCOV, limite medido sobre os testes da E2 (G4)
-- [ ] Gitleaks no pipeline (G6)
-- [ ] `docs/qaops/gates.md` com a ficha de cada gate
+- [x] Cobertura com PCOV, limite medido sobre os testes da E2 (G4): `TestimonialService` ≥ 90%, `NewsService` ≥ 80%, total de `app/Services` ≥ 65%; HTML no artifact `g4-coverage-report`
+- [x] Gitleaks no pipeline (G6), varrendo o histórico todo
+- [x] `docs/qaops/gates.md` com a ficha de cada gate
 
 ### E4. Experimento — Renato faz, Carlos revisa
 - [ ] Run aprovado registrado
