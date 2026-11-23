@@ -117,8 +117,6 @@ class NewsCrudTest extends TestCase
 
     public function test_validation_messages_reach_the_form(): void
     {
-        $this->markTestSkipped('BUG-4: the catch (Throwable) of the admin controllers swallows ValidationException.');
-
         $this->post('/admin/news', ['title' => '', 'description' => 'Texto'])->assertSessionHasErrors(['title']);
     }
 
@@ -169,8 +167,6 @@ class NewsCrudTest extends TestCase
 
     public function test_updating_missing_news_with_images_leaves_no_orphan_image(): void
     {
-        $this->markTestSkipped('BUG-3: NewsController::update() stores the images before checking that the news exists.');
-
         $this->put('/admin/news/999', ['title' => 'Resgate', 'description' => 'Texto', 'images' => [$this->pngUpload()]])
             ->assertSessionHas('error');
 
@@ -210,6 +206,18 @@ class NewsCrudTest extends TestCase
         $this->assertSame(['news/b.png'], $this->storedFiles());
     }
 
+    public function test_removing_an_image_of_another_record_is_refused(): void
+    {
+        $news = $this->newsWithStoredImages(['news/a.png']);
+        $this->newsWithStoredImages(['news/other.png']);
+
+        $this->postJson("/admin/news/{$news->id}/delete-image", ['image_path' => 'news/other.png'])
+            ->assertNotFound()
+            ->assertJson(['success' => false]);
+
+        $this->assertEqualsCanonicalizing(['news/a.png', 'news/other.png'], $this->storedFiles());
+    }
+
     public function test_removing_an_image_without_a_path_changes_nothing(): void
     {
         $news = $this->newsWithStoredImages(['news/a.png']);
@@ -223,8 +231,6 @@ class NewsCrudTest extends TestCase
 
     public function test_removing_an_image_without_a_path_is_a_validation_error(): void
     {
-        $this->markTestSkipped('BUG-4: the catch (Throwable) of the admin controllers swallows ValidationException.');
-
         $news = News::factory()->create();
 
         $this->postJson("/admin/news/{$news->id}/delete-image")->assertUnprocessable();

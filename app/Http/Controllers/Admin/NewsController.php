@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\NewsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class NewsController extends Controller
 {
@@ -72,6 +73,8 @@ class NewsController extends Controller
 
             return redirect()->route('admin.news.index')->with('success', 'Notícia criada com sucesso!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error('NewsController@store failed', [
                 'data' => $request->all(),
@@ -115,6 +118,8 @@ class NewsController extends Controller
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
+            $news = $this->news_service->getById($id);
+
             // Upload de novas imagens
             $newImagePaths = [];
             if ($request->hasFile('images')) {
@@ -124,7 +129,6 @@ class NewsController extends Controller
                 }
 
                 // Merge com imagens antigas se existirem
-                $news = $this->news_service->getById($id);
                 $oldImages = ! empty($news['images']) ? json_decode($news['images'], true) : [];
 
                 // Combinar imagens antigas com novas
@@ -136,6 +140,8 @@ class NewsController extends Controller
 
             return redirect()->route('admin.news.index')->with('success', 'Notícia atualizada com sucesso!');
 
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Throwable $e) {
             Log::error('NewsController@update failed', [
                 'id' => $id,
@@ -177,13 +183,24 @@ class NewsController extends Controller
                 'image_path' => 'required|string',
             ]);
 
-            $this->news_service->deleteImageFromNews($id, $validated['image_path']);
+            if (! $this->news_service->deleteImageFromNews($id, $validated['image_path'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Imagem não encontrada nesta notícia.',
+                ], 404);
+            }
 
             return response()->json([
                 'success' => true,
                 'message' => 'Imagem removida com sucesso!',
             ]);
 
+        } catch (ValidationException $e) {
+            // A tela espera JSON, mas não envia o header Accept
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
         } catch (\Throwable $e) {
             Log::error('NewsController@deleteImage failed', [
                 'id' => $id,
