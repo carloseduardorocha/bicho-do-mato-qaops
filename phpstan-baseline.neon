@@ -1,0 +1,25 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Class App\\Http\\Middleware\\EncryptCookies not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Class App\\Http\\Middleware\\VerifyCsrfToken not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Class Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Kernel.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Http/Middleware/Authenticate.php

@@ -1,0 +1,12 @@
+# Larastan (G2). Level 5: catches real bugs (unknown classes/methods,
+# wrong argument types, dead code) without requiring type annotations.
+# The baseline holds the errors that existed when the gate was added;
+# only new errors fail the pipeline. Rationale in docs/qaops/gates.md.
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - app/
