@@ -36,6 +36,7 @@ docker run --rm -v "$PWD":/app -w /app php:8.4-cli php artisan key:generate
 |---|---|
 | Tests | `docker run --rm -v "$PWD":/app -w /app php:8.4-cli php artisan test` |
 | Code style (Pint) | `docker run --rm -v "$PWD":/app -w /app php:8.4-cli vendor/bin/pint --test` |
+| Static analysis (Larastan, level 5 + baseline) | `docker run --rm -v "$PWD":/app -w /app php:8.4-cli vendor/bin/phpstan analyse --memory-limit=1G` |
 | App boots (all routes load) | `docker run --rm -v "$PWD":/app -w /app php:8.4-cli php artisan route:list` |
 | Dependencies | `docker run --rm -v "$PWD":/app -w /app composer:2 audit` |
 

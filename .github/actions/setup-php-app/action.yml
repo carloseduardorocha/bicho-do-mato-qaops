@@ -1,0 +1,47 @@
+name: Set up PHP app
+description: PHP 8.4, Composer cache and composer install (shared by the gate jobs).
+
+inputs:
+  install:
+    description: Run composer install after setting up PHP.
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up PHP 8.4
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.4"
+        extensions: mbstring, pdo_sqlite, sqlite3, fileinfo, gd
+        coverage: none
+        tools: composer:v2
+
+    - name: Locate Composer cache
+      id: composer-cache
+      shell: bash
+      run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+    - name: Cache Composer downloads
+      uses: actions/cache@v6
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: composer-${{ runner.os }}-php8.4-${{ hashFiles('composer.lock') }}
+        restore-keys: composer-${{ runner.os }}-php8.4-
+
+    - name: composer install
+      if: inputs.install == 'true'
+      shell: bash
+      run: |
+        mkdir -p ci-out
+        if ! composer install --no-interaction --no-progress --prefer-dist 2>&1 | tee ci-out/composer-install.log; then
+          echo "::error title=composer install failed::Dependencies could not be installed. Check composer.json/composer.lock (log: ci-out/composer-install.log)."
+          exit 1
+        fi
+
+    - name: Prepare .env (no secrets, generated key)
+      if: inputs.install == 'true'
+      shell: bash
+      run: |
+        cp .env.example .env
+        php artisan key:generate --ansi
