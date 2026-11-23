@@ -15,7 +15,9 @@ docker run --rm -v "$PWD":/app -w /app composer:2 install --ignore-platform-req=
 ./vendor/bin/sail artisan storage:link
 ```
 
-The app runs at <http://localhost>. Admin users are created in `/admin/users` (there is no public sign-up).
+The app runs at <http://localhost>. There is no public sign-up: the seed creates the first admin, and the others are created in `/admin/users`.
+
+- Admin login: `SEED_ADMIN_EMAIL` from `.env` (`admin@example.com` by default). Set `SEED_ADMIN_PASSWORD` before seeding, or leave it empty and copy the random password printed by `migrate:fresh --seed`. No password is stored in the repository.
 
 - `.env.example` is ready for Sail: the database is the `mysql` container, with local-only credentials.
 - If port 80 or 3306 is taken, set `APP_PORT` and `FORWARD_DB_PORT` in `.env` (e.g. `8080` and `3307`) before `sail up`.

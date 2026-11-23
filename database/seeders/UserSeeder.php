@@ -5,40 +5,39 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Create the first admin user for a local environment.
+     *
+     * No credentials live in the repository: the e-mail and the password come
+     * from .env (SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD). Without a password,
+     * a random one is generated and printed once.
      */
     public function run(): void
     {
-        $email = 'admin@admin.com';
-        $user = User::where('email', $email)->first();
+        $email = env('SEED_ADMIN_EMAIL') ?: 'admin@example.com';
 
-        if (! $user) {
-            User::create([
-                'name' => 'Admin',
-                'email' => $email,
-                'password' => Hash::make('admin123'),
-            ]);
-
-            $this->command->info('✓ Usuário criado com sucesso!');
-            $this->command->info('  Email: admin@admin.com | Senha: admin123');
+        if (User::where('email', $email)->exists()) {
+            return;
         }
 
-        $email = 'bug_alarme@hotmail.com';
-        $user = User::where('email', $email)->first();
+        $password = env('SEED_ADMIN_PASSWORD');
+        $generated = ! $password;
+        $password = $password ?: Str::password(16, symbols: false);
 
-        if (! $user) {
-            User::create([
-                'name' => 'Bug',
-                'email' => $email,
-                'password' => Hash::make('change-me-in-env'),
-            ]);
+        User::create([
+            'name' => 'Admin',
+            'email' => $email,
+            'password' => Hash::make($password),
+        ]);
 
-            $this->command->info('✓ Usuário criado com sucesso!');
-            $this->command->info('  Email: bug_alarme@hotmail.com | Senha: change-me-in-env');
+        $this->command->info("✓ Admin criado: {$email}");
+
+        if ($generated) {
+            $this->command->warn("  Senha gerada (anote, ela não aparece de novo): {$password}");
         }
     }
 }
