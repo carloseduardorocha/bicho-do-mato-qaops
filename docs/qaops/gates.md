@@ -24,12 +24,12 @@ Entrega E3. Atende à seção 6 do [enunciado](enunciado.pdf): cada gate tem cri
 
 | Campo | Registro |
 |---|---|
-| Nome e critério | **Análise estática.** Pint `--test` sem diferença de estilo **e** Larastan nível 5 sem erro fora da baseline (`phpstan-baseline.neon`). |
+| Nome e critério | **Análise estática.** Pint `--test` sem diferença de estilo **e** Larastan nível 5 sem nenhum erro (a baseline, `phpstan-baseline.neon`, está vazia). |
 | Justificativa | R6: bug de tipo ou código fora do padrão. O nível 5 pega defeito real (classe ou método inexistente, tipo de argumento errado, código morto) sem exigir anotação de tipo. Medido em `app/` (PR #4): níveis 0 a 5 dão 3 a 4 erros, e do nível 6 em diante saltam para 86, dos quais 82 são só falta de anotação, não defeito. O Pint mantém um estilo único entre os dois integrantes, para o diff do PR mostrar só a mudança real. |
 | Momento | Etapa "análise estática", job `G2 Static analysis`, em push e PR na `main`. |
 | Evidência | Logs do Pint e do Larastan (artifact `g2-static-analysis-logs`), tabela no resumo do run e anotação do Larastan no arquivo e na linha do erro. |
 | Consequência | Bloqueia o merge. |
-| Limitação/exceção | Não verifica comportamento, só a forma do código. Os 4 erros antigos ficam na baseline (3 classes inexistentes em `app/Http/Kernel.php`, que o Laravel 12 não usa, e código inalcançável em `Authenticate.php`). São achados reais do código compartilhado, aceitos até a dupla combinar quem remove. Erro novo não entra na baseline sem revisão no PR. |
+| Limitação/exceção | Não verifica comportamento, só a forma do código. Quando o gate entrou (PR #4), o Larastan achou 4 erros reais, guardados na baseline: 3 classes inexistentes em `app/Http/Kernel.php`, arquivo que o Laravel 12 nem carrega, e código inalcançável em `Authenticate.php`, depois de um `dd('aq')` de depuração esquecido. Os dois arquivos estavam mortos e foram apagados na E5, e a baseline ficou vazia. Ela continua existindo só para uma exceção revisada no PR (ex.: falso positivo do Larastan), nunca para esconder um defeito. |
 
 ## G3. Testes
 

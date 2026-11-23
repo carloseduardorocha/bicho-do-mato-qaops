@@ -69,7 +69,7 @@ jobs:
         continue-on-error: true
         run: vendor/bin/pint --test -v 2>&1 | tee ci-out/pint.log
 
-      - name: Larastan (level 5, new errors only)
+      - name: Larastan (level 5)
         id: larastan
         continue-on-error: true
         run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G --error-format=table 2>&1 | tee ci-out/larastan.log
@@ -86,7 +86,7 @@ jobs:
             echo "| Check | Result |"
             echo "|---|---|"
             echo "| Pint (code style) | $([ "$pint" = success ] && echo '✅ no differences' || echo '❌ files out of style') |"
-            echo "| Larastan level 5 | $([ "$larastan" = success ] && echo '✅ no new errors' || echo '❌ new errors (baseline: phpstan-baseline.neon)') |"
+            echo "| Larastan level 5 | $([ "$larastan" = success ] && echo '✅ no errors' || echo '❌ errors found') |"
           } >> "$GITHUB_STEP_SUMMARY"
           fail=0
           if [ "$pint" != success ]; then
@@ -94,7 +94,7 @@ jobs:
             fail=1
           fi
           if [ "$larastan" != success ]; then
-            echo "::error title=G2 Larastan::Larastan found errors that are not in the baseline. See the 'Larastan' step or the annotations on the changed files."
+            echo "::error title=G2 Larastan::Larastan found errors (level 5, baseline is empty). See the 'Larastan' step or the annotations on the changed files."
             fail=1
           fi
           exit $fail
@@ -361,7 +361,7 @@ jobs:
             echo "| Gate | Critério | Resultado |"
             echo "|---|---|---|"
             echo "| G1 Build | composer install e o Laravel sobe (route:list) | $(verdict '${{ needs.build.result }}') |"
-            echo "| G2 Análise estática | Pint sem diferença, Larastan nível 5 sem erro novo | $(verdict '${{ needs.static-analysis.result }}') |"
+            echo "| G2 Análise estática | Pint sem diferença, Larastan nível 5 sem erro | $(verdict '${{ needs.static-analysis.result }}') |"
             echo "| G3 Testes | 100% dos testes passando | $(verdict '${{ needs.tests.result }}') |"
             echo "| G4 Cobertura | linhas em app/Services: TestimonialService ≥ 90%, NewsService ≥ 80%, total ≥ 65% | $(verdict '${{ needs.coverage.result }}') |"
             echo "| G5 Dependências | nenhuma vulnerabilidade crítica | $(verdict '${{ needs.dependencies.result }}') |"
