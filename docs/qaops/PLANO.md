@@ -66,9 +66,9 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 - [ ] Branch protection na `main`: PR obrigatório, checks obrigatórios, 1 aprovação
 
 ### E2. Testes — Renato
-- [ ] Factories de `News`, `Partner` e `Testimonial`
-- [ ] Testes de R1 a R4, com casos positivos e negativos, unitários (`tests/Unit`) e de feature/integração (`tests/Feature`)
-- [ ] `docs/qaops/testes.md`: tabela risco → teste → tipo, com justificativa do que ficou de fora
+- [x] Factories de `News`, `Partner` e `Testimonial`
+- [x] Testes de R1 a R4, com casos positivos e negativos, unitários (`tests/Unit`) e de feature/integração (`tests/Feature`)
+- [x] `docs/qaops/testes.md`: tabela risco → teste → tipo, com justificativa do que ficou de fora
 
 ### E3. Gates finais — Carlos
 - [ ] Cobertura com PCOV, limite medido sobre os testes da E2 (G4)
