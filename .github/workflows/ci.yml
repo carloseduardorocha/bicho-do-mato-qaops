@@ -202,8 +202,13 @@ jobs:
         run: |
           python3 - <<'PY'
           import os, sys, xml.etree.ElementTree as ET
-          BLOCK = {"TestimonialService.php": 90, "NewsService.php": 80}  # services of R1, R3, R4
-          TOTAL = 65                                                     # floor for all of app/Services
+          BLOCK = {
+              "TestimonialService.php": 90,  # R1, R3 (used by the E4 experiment)
+              "NewsService.php": 80,         # R4
+              "PartnerService.php": 80,      # outside R1-R4, covered in E5
+              "UserService.php": 100,        # outside R1-R4, covered in E5
+          }
+          TOTAL = 85                         # floor for all of app/Services
           out = open(os.environ["GITHUB_STEP_SUMMARY"], "a")
           out.write("### G4 Coverage (lines, app/Services)\n")
           try:
@@ -230,7 +235,7 @@ jobs:
               else:
                   rule, res = "report only", "⚠️ below the total floor" if p < TOTAL else "ℹ️"
                   if p < TOTAL:
-                      print(f"::warning title=G4 Coverage ({name})::{p:.1f}% of lines covered (not blocking: outside risks R1-R4).")
+                      print(f"::warning title=G4 Coverage ({name})::{p:.1f}% of lines covered (not blocking: no per-file limit yet, only the total). Add the file to BLOCK in ci.yml with its measured coverage.")
               out.write(f"| `{name}` | {cov}/{stm} | {p:.1f}% | {rule} | {res} |\n")
           total = pct(cov_all, stm_all)
           ok = total >= TOTAL
@@ -363,7 +368,7 @@ jobs:
             echo "| G1 Build | composer install e o Laravel sobe (route:list) | $(verdict '${{ needs.build.result }}') |"
             echo "| G2 Análise estática | Pint sem diferença, Larastan nível 5 sem erro | $(verdict '${{ needs.static-analysis.result }}') |"
             echo "| G3 Testes | 100% dos testes passando | $(verdict '${{ needs.tests.result }}') |"
-            echo "| G4 Cobertura | linhas em app/Services: TestimonialService ≥ 90%, NewsService ≥ 80%, total ≥ 65% | $(verdict '${{ needs.coverage.result }}') |"
+            echo "| G4 Cobertura | linhas em app/Services: Testimonial ≥ 90%, News ≥ 80%, Partner ≥ 80%, User = 100%, total ≥ 85% | $(verdict '${{ needs.coverage.result }}') |"
             echo "| G5 Dependências | nenhuma vulnerabilidade crítica | $(verdict '${{ needs.dependencies.result }}') |"
             echo "| G6 Segredos | Gitleaks sem achados no histórico todo | $(verdict '${{ needs.secrets.result }}') |"
           } >> "$GITHUB_STEP_SUMMARY"

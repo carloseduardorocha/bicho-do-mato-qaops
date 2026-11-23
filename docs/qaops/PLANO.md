@@ -35,7 +35,7 @@ Site da ONG Bicho do Mato: páginas públicas (home, notícias, parceiros, depoi
 | G1 | Build | `composer install` sem erro e o Laravel sobe (`php artisan route:list`) | Bloqueia |
 | G2 | Análise estática | Pint sem diferença, Larastan nível 5 sem erro (baseline vazia) | Bloqueia |
 | G3 | Testes | 100% dos testes passando | Bloqueia |
-| G4 | Cobertura | Linhas em `app/Services`: `TestimonialService` ≥ 90%, `NewsService` ≥ 80%, total ≥ 65% (medido na E3, justificado em `gates.md`) | Bloqueia (User e Partner só alertam) |
+| G4 | Cobertura | Linhas em `app/Services`: `TestimonialService` ≥ 90%, `NewsService` ≥ 80%, `PartnerService` ≥ 80%, `UserService` 100%, total ≥ 85% (medido na E3 e na E5, justificado em `gates.md`) | Bloqueia |
 | G5 | Dependências | Nenhuma vulnerabilidade crítica | Bloqueia |
 | G6 | Segredos | Gitleaks sem achados | Bloqueia |
 
