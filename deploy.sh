@@ -12,12 +12,9 @@ cd $PROJECT_PATH || { echo "❌ Erro: Pasta do projeto não encontrada"; exit 1;
 echo "📥 Atualizando código via Git..."
 git fetch && git pull origin main
 
-# 2. Dependências PHP e Assets
+# 2. Dependências PHP (sem build de front: Blade + Bootstrap por CDN)
 echo "📦 Instalando dependências PHP (Composer)..."
 composer install --no-dev --optimize-autoloader
-
-echo "📦 Instalando dependências Node e compilando assets..."
-npm install && npm run build
 
 # 3. Banco de Dados
 echo "🗄️ Executando migrations..."
