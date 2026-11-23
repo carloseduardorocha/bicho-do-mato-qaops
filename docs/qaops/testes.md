@@ -11,7 +11,7 @@ Entrega E2. Atende à etapa 4 da seção 5 do [enunciado](enunciado.pdf): casos 
 
 ## Risco → teste → tipo
 
-(+) caso positivo, (−) caso negativo, `skip` teste que expõe um bug aberto (ver [Bugs encontrados](#bugs-encontrados)).
+(+) caso positivo, (−) caso negativo.
 
 ### R1. Depoimento não aprovado aparece no site
 
@@ -27,7 +27,7 @@ Entrega E2. Atende à etapa 4 da seção 5 do [enunciado](enunciado.pdf): casos 
 | `/depoimentos` e a home mostram aprovados (+) e escondem pendentes e excluídos (−) | `TestimonialVisibilityTest` | Feature |
 | Envio → fila → aprovação → site, de ponta a ponta (+) | `TestimonialModerationTest`: `test_testimonial_sent_by_the_public_appears_only_after_approval` | Feature |
 | Rejeitado, excluído, criado ou editado no admin não vira público (−) | `TestimonialModerationTest` | Feature |
-| A rota `/admin/testimonials/pending` abre (+) | `TestimonialModerationTest`: `test_pending_route_*` | Feature, `skip` BUG-5 |
+| A rota `/admin/testimonials/pending` abre (+) | `TestimonialModerationTest`: `test_pending_route_*` | Feature |
 
 ### R2. Visitante sem login acessa o `/admin` ou cria conta
 
@@ -63,21 +63,21 @@ Toda recusa confere três coisas: erro no campo certo, nenhum registro no banco 
 | Listar, paginar e buscar, sem excluídas (+/−) | `NewsServiceTest`: `test_get_*`, `test_paginated_list_*` | Unitário |
 | Criar (+); falha ao criar apaga as imagens (−) | `NewsServiceTest`: `test_create_*` | Unitário |
 | Atualizar só os campos enviados (+); notícia inexistente apaga as imagens novas (−) | `NewsServiceTest`: `test_update_*` | Unitário |
-| Falha ao atualizar preserva as imagens antigas (−) | `NewsServiceTest`: `test_failed_update_*` | Unitário, `skip` BUG-1 |
+| Falha ao atualizar preserva as imagens antigas (−) | `NewsServiceTest`: `test_failed_update_*` | Unitário |
 | Excluir apaga as imagens dessa notícia e de nenhuma outra (+/−) | `NewsServiceTest`: `test_delete_*`, `test_cleanup_*` | Unitário |
 | Remover uma imagem mantém as outras (+); notícia inexistente não apaga nada (−) | `NewsServiceTest`: `test_deleting_one_image_*`, `test_deleting_the_last_image_*`, `test_deleting_an_image_of_missing_news_*` | Unitário |
-| Remover imagem não apaga arquivo de outro registro (−) | `NewsServiceTest`: `test_deleting_an_image_never_touches_*` | Unitário, `skip` BUG-2 |
+| Remover imagem não apaga arquivo de outro registro (−) | `NewsServiceTest`: `test_deleting_an_image_never_touches_*` | Unitário |
 | CRUD completo pelo admin, com imagens no disco iguais às do banco (+) | `NewsCrudTest` | Feature |
 | Dados ou arquivo inválido e falha ao salvar não deixam registro nem imagem (−) | `NewsCrudTest`: `test_invalid_*`, `test_one_invalid_file_*`, `test_failure_while_creating_*` | Feature |
-| Atualizar notícia inexistente com imagem não deixa órfã (−) | `NewsCrudTest`: `test_updating_missing_news_*` | Feature, `skip` BUG-3 |
-| Erro de validação chega ao formulário e, no JSON, responde 422 (−) | `NewsCrudTest`: `test_validation_messages_*`, `test_removing_an_image_without_a_path_is_a_validation_error` | Feature, `skip` BUG-4 |
+| Atualizar notícia inexistente com imagem não deixa órfã (−) | `NewsCrudTest`: `test_updating_missing_news_*` | Feature |
+| Erro de validação chega ao formulário e, no JSON, responde 422 (−) | `NewsCrudTest`: `test_validation_messages_*`, `test_removing_an_image_without_a_path_is_a_validation_error` | Feature |
 | Notícia publicada abre no site (+); excluída some (−) | `NewsCrudTest`: `test_published_news_*`, `test_deleted_news_*` | Feature |
 
 ## Resultado
 
-`php artisan test`, PHP 8.4, SQLite em memória, 22/11/2026: **122 testes, 116 aprovados, 6 pulados, 0 falhas**, 367 asserções, cerca de 5 s.
+`php artisan test`, PHP 8.4, SQLite em memória, 23/11/2026: **133 testes, 133 aprovados, 0 pulados, 0 falhas**, 417 asserções, cerca de 5 s.
 
-**Os testes detectam defeitos?** Cada alteração abaixo foi feita, uma por vez, em uma cópia descartável do projeto:
+**Os testes detectam defeitos?** Cada alteração abaixo foi feita, uma por vez, em uma cópia descartável do projeto, sobre a suíte da E2 (122 testes, 6 então pulados):
 
 | Defeito introduzido | Testes que reprovam |
 |---|---|
@@ -93,20 +93,17 @@ Toda recusa confere três coisas: erro no campo certo, nenhum registro no banco 
 
 ## Bugs encontrados
 
-O código de produção não foi alterado na E2. Os testes descrevem o comportamento correto e, sem o `skip`, reprovam. Corrigido o bug, basta remover a linha `markTestSkipped`.
+A E2 não alterou o código de produção: os testes que pegaram bugs entraram pulados. As correções vieram depois, na branch `fix/e2-bugs`, e nenhum teste está mais pulado. Contra o código anterior às correções, 17 dos 133 testes reprovam.
 
-| Bug | Onde | Efeito |
-|---|---|---|
-| BUG-1 | `NewsService::update()` | Se salvar falha depois de um envio de imagens, apaga também as antigas, que o registro continua citando. Perda de dados. |
-| BUG-2 | `NewsService::deleteImageFromNews()` | Apaga qualquer arquivo do disco público, mesmo de outra notícia, parceiro ou depoimento (exige login). |
-| BUG-3 | `NewsController::update()` | Grava as imagens antes de conferir se a notícia existe. Se ela não existe, elas ficam órfãs. |
-| BUG-4 | Controllers do admin | O `catch (\Throwable)` engole a `ValidationException`: o formulário só mostra um erro genérico, e o `delete-image` responde 500 em vez de 422. |
-| BUG-5 | `routes/web.php` | `admin.testimonials.pending` aponta para um método inexistente e responde 500. |
-
-Dois problemas foram vistos na leitura do código e **não** têm teste:
-
-- **Texto de 256 a 500 caracteres.** A validação aceita até 500, mas a coluna `testimonials.description` tem 255. O SQLite não impõe esse tamanho. No MySQL em modo estrito, o envio falha.
-- **Senha no log.** Quando criar ou editar usuário falha, `UserController` registra `$request->all()` e `UserService` registra `$data`, ambos com a senha em texto puro. O Gitleaks não detecta isso.
+| Bug | Efeito | Correção | Teste |
+|---|---|---|---|
+| BUG-1 | Falha ao atualizar notícia apagava também as imagens antigas | `NewsService::update()` apaga só as imagens novas | `NewsServiceTest`: `test_failed_update_*` |
+| BUG-2 | Remover imagem apagava qualquer arquivo do disco público | `deleteImageFromNews()` só apaga imagem da própria notícia; a rota responde 404 | `NewsServiceTest`: `test_deleting_an_image_never_touches_*`; `NewsCrudTest`: `test_removing_an_image_of_another_record_*` |
+| BUG-3 | Atualizar notícia inexistente deixava imagem órfã | `NewsController::update()` confere a notícia antes de gravar | `NewsCrudTest`: `test_updating_missing_news_*` |
+| BUG-4 | Erro de validação do admin virava erro genérico, ou 500 no JSON | Os 4 controllers repassam a `ValidationException`; o JSON responde 422 | `FormValidationTest`; `NewsCrudTest`: `test_validation_messages_*`, `test_removing_an_image_without_a_path_is_a_validation_error` |
+| BUG-5 | `/admin/testimonials/pending` respondia 500 | A rota abre a tela de moderação | `TestimonialModerationTest`: `test_pending_route_*` |
+| BUG-6 | Falha ao salvar usuário gravava a senha em texto puro no log | Senha retirada dos dados registrados | `UserPasswordLogTest` |
+| BUG-7 | Depoimento de 256 a 500 caracteres falhava no MySQL (coluna de 255) | Migration aumenta a coluna para 500 | Sem teste automatizado: o SQLite não impõe o tamanho. Verificado à mão no MySQL 8.0, antes (erro) e depois (aceito) |
 
 ## O que ficou de fora e por quê
 
