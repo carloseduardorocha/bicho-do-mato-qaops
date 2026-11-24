@@ -51,6 +51,27 @@ O Carlos opera o computador o tempo todo; quem fala no bloco diz o que clicar. A
 
 Total: 11 min, com 1 min de folga para a espera do Actions.
 
+## Passo a passo no computador (Carlos)
+
+O que o Carlos faz no teclado e no mouse, na ordem do roteiro. Quem fala está na tabela acima.
+
+| Tempo | Ação |
+|---|---|
+| Antes | Abrir as abas da lista "Antes da defesa". No terminal, já na pasta do repo: `git switch demo/defesa && git pull`. Voltar para a aba dos slides e apertar **F** (tela cheia). |
+| 0:00 | Slide 1. Apertar **→** quando o Renato começar (slide 2) e de novo às 1:50 (slide 3). |
+| 2:50 | Sair da tela cheia (**Esc**) e ir para a aba 2 (comparação). Mostrar a diferença de 1 linha em *Files changed*, no fim da página. O título já vem do commit. Clicar em **Create pull request**. |
+| 3:00 | Na página do PR, rolar até o fim: a caixa dos checks fica amarela ("Some checks haven't completed yet"). Deixar essa aba aberta. |
+| 3:20 | Voltar para os slides, **F** e **→** (slide 4). |
+| 4:30 | **Esc** e voltar à aba do PR. Se ainda estiver amarelo, recarregar a página (F5). A caixa mostra "Some checks were not successful". Clicar em **Show all checks**: `G3 Tests` e `Quality gates` em vermelho, os outros 5 em verde, todos *Required*, e "Merging is blocked". |
+| 5:00 | Clicar em **Details** ao lado de `G3 Tests`. Na página do run, clicar em **Summary** (no alto, à esquerda). Rolar devagar: *Annotations* (os testes reprovados, com arquivo e linha), a tabela do Quality gates, a lista dos testes que falharam e, no fim, *Artifacts* (`g3-tests-junit`, `g4-coverage-report`). Não precisa baixar nada. |
+| 6:30 | Ir para o terminal e rodar `git revert --no-edit HEAD && git push`. Voltar para a aba do PR e recarregar: aparece o commit "Revert …", e os checks voltam a ficar amarelos. |
+| 6:50 | Ir para a aba 3 (run aprovado da `main`), no **Summary**. Rolar: tabela dos gates toda verde, cobertura por Service, G5 com o aviso do `psy/psysh`, G6 com os commits varridos e, no fim, *Artifacts*. |
+| 8:00 | Voltar para a aba do PR e recarregar: 7 checks verdes, falta só a aprovação. Rolar até o fim e clicar em **Close pull request**, ao lado do botão de comentar. **Não** clicar em *Merge*. |
+| 8:40 | Voltar para os slides, **F** e **→** (slide 5). Às 9:30, **→** (slide 6). Às 10:30, **→** (slide 7, Obrigado). |
+| Fim | Ficar no slide 7 durante as perguntas. Se o professor pedir para ver algo, as abas continuam abertas. |
+
+Se algo travar, consultar o plano B abaixo, sem parar a fala: quem está falando continua pelo slide ou pelo relatório.
+
 ## Plano B
 
 | Problema | O que fazer |
@@ -63,4 +84,4 @@ Total: 11 min, com 1 min de folga para a espera do Actions.
 
 ## Depois da defesa
 
-Fechar o PR da demonstração sem merge (se ainda estiver aberto) e apagar a branch: `gh pr close <número> --delete-branch`.
+Se o PR da demonstração ainda estiver aberto, fechar sem merge: `gh pr close <número>`. Depois, apagar a branch no GitHub e na máquina: `git switch main && git push origin --delete demo/defesa && git branch -D demo/defesa`.
