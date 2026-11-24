@@ -14,6 +14,9 @@ Documentation (in Portuguese):
 - [`docs/qaops/testes.md`](docs/qaops/testes.md): risk → test → type, and what was left out
 - [`docs/qaops/gates.md`](docs/qaops/gates.md): the record of each gate (criterion, rationale, evidence, consequence, limits)
 - [`docs/qaops/experimento.md`](docs/qaops/experimento.md): approved, rejected and fixed runs, compared
+- [`docs/qaops/relatorio.md`](docs/qaops/relatorio.md) ([PDF](docs/qaops/relatorio.pdf)): technical report
+- [`docs/qaops/defesa.md`](docs/qaops/defesa.md): defense script and live demo, with [`slides.html`](docs/qaops/slides.html) and [`perguntas.md`](docs/qaops/perguntas.md)
+- [`docs/qaops/registro-final.md`](docs/qaops/registro-final.md): final team record
 
 ## Run the app (Sail)
 
