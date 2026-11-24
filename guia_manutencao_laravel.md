@@ -20,11 +20,7 @@ git pull origin main
 composer install --no-dev --optimize-autoloader
 ```
 
-### Node.js e Assets
-```bash
-npm install
-npm run build
-```
+Não há build de front: as telas são Blade com Bootstrap por CDN.
 
 ## 3. Banco de Dados
 
@@ -84,7 +80,6 @@ sudo chmod -R 775 storage bootstrap/cache
 cd /var/www/bicho-do-mato
 git pull origin main
 composer install --no-dev --optimize-autoloader
-npm install && npm run build
 php artisan migrate --force
 php artisan cache:clear
 php artisan config:clear

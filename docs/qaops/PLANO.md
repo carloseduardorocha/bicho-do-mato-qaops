@@ -33,9 +33,9 @@ Site da ONG Bicho do Mato: páginas públicas (home, notícias, parceiros, depoi
 | # | Gate | Critério | Consequência |
 |---|---|---|---|
 | G1 | Build | `composer install` sem erro e o Laravel sobe (`php artisan route:list`) | Bloqueia |
-| G2 | Análise estática | Pint sem diferença, Larastan sem erro novo (baseline aceita os antigos) | Bloqueia |
+| G2 | Análise estática | Pint sem diferença, Larastan nível 5 sem erro (baseline vazia) | Bloqueia |
 | G3 | Testes | 100% dos testes passando | Bloqueia |
-| G4 | Cobertura | Linhas em `app/Services`: `TestimonialService` ≥ 90%, `NewsService` ≥ 80%, total ≥ 65% (medido na E3, justificado em `gates.md`) | Bloqueia (User e Partner só alertam) |
+| G4 | Cobertura | Linhas em `app/Services`: `TestimonialService` ≥ 90%, `NewsService` ≥ 80%, `PartnerService` ≥ 80%, `UserService` 100%, total ≥ 85% (medido na E3 e na E5, justificado em `gates.md`) | Bloqueia |
 | G5 | Dependências | Nenhuma vulnerabilidade crítica | Bloqueia |
 | G6 | Segredos | Gitleaks sem achados | Bloqueia |
 
@@ -81,12 +81,15 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 - [x] Correção no mesmo PR: pipeline verde
 - [x] `docs/qaops/experimento.md` com os links dos 3 runs, onde e por que falhou, e o tempo de cada run
 
-### E5. Relatório e defesa — os dois
-- [ ] Carlos: seções 1, 4, 6 e 8 (feedback, tempo, custo de manutenção)
-- [ ] Renato: seções 2, 3, 5 e 7
-- [ ] Juntos: 8 (lacunas, evolução, deploy e observabilidade), 9, referências e o roteiro da defesa (quem fala o quê)
+### E5. Revisão, relatório e defesa — Carlos faz, Renato aprova os PRs
+- [x] Revisão geral contra o enunciado (branch `chore/e5-review-fixes`): README sobe o app pelo Sail de ponta a ponta, seeder sem senha (admin vem do `.env`), arquivos mortos do `app/Http` apagados e baseline do Larastan vazia, `PartnerService` e `UserService` cobertos e bloqueando no G4, raiz do repo limpa, links dos docs no README
+- [ ] Relatório de 6 a 10 páginas, seções 1 a 9 e referências da §8 do enunciado. Evoluções a citar: `catch (ValidationException $e) { throw $e; }` repetido 9 vezes nos controllers do admin, rota `GET /admin/testimonials/pending` duplicada, aviso médio do `psy/psysh` (G5)
+- [ ] Roteiro da defesa (10 a 12 min, §9): disparo, run aprovado, reprovado, evidências e correção. O professor pode perguntar a cada um, então os dois ensaiam tudo
+- [ ] Registro final da dupla (última página do enunciado), revisado pelos dois
 
 ## Donos de cada área
+
+Da E5 em diante, o Carlos mexe em todas as áreas e o Renato revisa e aprova cada PR (a `main` exige 1 aprovação). Até a E4, a divisão foi esta:
 
 | Área | Dono |
 |---|---|
@@ -98,7 +101,7 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 
 ## Como trabalhamos juntos
 
-1. **Antes de mexer na área do outro, fale com ele.** Se a sua entrega precisa mudar um arquivo do outro ou do código compartilhado, pare e combine antes (mensagem ou comentário no PR). A sessão do Claude não muda esses arquivos sozinha: ela para e pede que a pessoa alinhe com o colega.
+1. **Antes de mexer na área do outro, fale com ele** (até a E4; depois, ver "Donos de cada área"). Se a sua entrega precisa mudar um arquivo do outro ou do código compartilhado, pare e combine antes (mensagem ou comentário no PR). A sessão do Claude não muda esses arquivos sozinha: ela para e pede que a pessoa alinhe com o colega.
 2. **Precisa de uma dependência nova?** Peça ao Carlos (dono do `composer.json`), para evitar conflito nos lockfiles.
 3. **Achou um bug no código de produção?** Não conserte por conta. Abra uma issue ou comente no PR e combinem quem corrige.
 4. **Comece sempre da `main` atualizada:** `git switch main && git pull`, depois crie a branch.

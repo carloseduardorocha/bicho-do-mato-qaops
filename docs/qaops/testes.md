@@ -73,9 +73,26 @@ Toda recusa confere três coisas: erro no campo certo, nenhum registro no banco 
 | Erro de validação chega ao formulário e, no JSON, responde 422 (−) | `NewsCrudTest`: `test_validation_messages_*`, `test_removing_an_image_without_a_path_is_a_validation_error` | Feature |
 | Notícia publicada abre no site (+); excluída some (−) | `NewsCrudTest`: `test_published_news_*`, `test_deleted_news_*` | Feature |
 
+### Parceiros e usuários (fora de R1 a R4, cobertos na E5)
+
+Entraram para o G4 bloquear também esses dois Services, antes só com alerta.
+
+| Comportamento verificado | Teste | Tipo |
+|---|---|---|
+| Listar, paginar e buscar parceiros, sem excluídos (+/−) | `PartnerServiceTest`: `test_get_*`, `test_paginated_list_*` | Unitário |
+| Criar com logo (+); falha ao criar apaga o logo enviado (−) | `PartnerServiceTest`: `test_create_*` | Unitário |
+| Atualizar só os campos enviados; logo novo apaga o antigo, o mesmo logo fica (+) | `PartnerServiceTest`: `test_update_*` | Unitário |
+| Parceiro inexistente ou falha ao salvar: some o logo novo, fica o antigo (−) | `PartnerServiceTest`: `test_update_of_a_missing_*`, `test_failed_update_*` | Unitário |
+| Excluir (+/−) e limpar só os logos de parceiros excluídos (+) | `PartnerServiceTest`: `test_delete_*`, `test_cleanup_*` | Unitário |
+| Senha sempre com hash; listar sem expor a senha (+) | `UserServiceTest`: `test_create_stores_*`, `test_get_all_*` | Unitário |
+| Editar sem senha, ou com senha vazia, mantém a antiga (−); com senha nova, troca (+) | `UserServiceTest`: `test_update_*` | Unitário |
+| E-mail repetido é recusado (−); a checagem ignora o próprio usuário em edição (+) | `UserServiceTest`: `test_create_with_a_repeated_email_fails`, `test_email_exists_*` | Unitário |
+
+Defeitos introduzidos à mão para conferir: senha vazia apagando a antiga (1 teste reprova), logo antigo mantido após a troca (1) e logo antigo apagado antes de salvar (3). Gravar a senha sem `Hash::make` não reprova nada, e está certo: o model `User` já faz o hash (cast `hashed`), então o comportamento não muda.
+
 ## Resultado
 
-`php artisan test`, PHP 8.4, SQLite em memória, 23/11/2026: **133 testes, 133 aprovados, 0 pulados, 0 falhas**, 417 asserções, cerca de 5 s.
+`php artisan test`, PHP 8.4, SQLite em memória, 23/11/2026: **160 testes, 160 aprovados, 0 pulados, 0 falhas**, 467 asserções, cerca de 5 s (133 até a E4, mais 27 de parceiros e usuários na E5).
 
 **Os testes detectam defeitos?** Cada alteração abaixo foi feita, uma por vez, em uma cópia descartável do projeto, sobre a suíte da E2 (122 testes, 6 então pulados):
 
@@ -109,7 +126,7 @@ A E2 não alterou o código de produção: os testes que pegaram bugs entraram p
 
 | Fora | Motivo |
 |---|---|
-| CRUD de parceiros e de usuários (`PartnerService`, `UserService`) | Fora de R1 a R4. Só entram no controle de acesso do R2. Como o G4 mede `app/Services` inteiro, isso reduz a cobertura e deve pesar na escolha do limite na E3. |
+| CRUD de parceiros e de usuários pelo admin (controllers e telas) | Fora de R1 a R4. Os Services foram cobertos na E5 (seção acima) e as rotas entram no controle de acesso do R2, mas não há teste de feature do formulário de parceiros e usuários. |
 | Regras próprias do MySQL (tamanho de coluna, modo estrito) | A suíte usa SQLite em memória, para rodar rápido e sem serviço externo. |
 | Login além do básico (limite de tentativas, "lembrar de mim") e CSRF | Código do framework. O Laravel desliga a verificação de CSRF durante os testes. |
 | Upload real pela web (limites do PHP e do Nginx) e link `public/storage` | Dependem do ambiente de implantação. |

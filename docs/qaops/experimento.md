@@ -26,7 +26,7 @@ Foi escolhida por atingir a funcionalidade central e por ser um defeito que só 
 | Gatilho | push na `main` | pull request [#7](https://github.com/carloseduardorocha/bicho-do-mato-qaops/pull/7) | pull request [#7](https://github.com/carloseduardorocha/bicho-do-mato-qaops/pull/7) |
 | Commit | `e0b4cd8` | `79548cc` (remove o filtro) | `de93873` (devolve o filtro) |
 | Início | 15:56:47 | 16:20:18 | 16:35:59 |
-| Duração do run | 40 s | 36 s | 49 s |
+| Duração do run | 39 s | 36 s | 49 s |
 | G1 Build | ✅ 15 s | ✅ 14 s | ✅ 15 s |
 | G2 Análise estática | ✅ 16 s | ✅ 21 s | ✅ 19 s |
 | G3 Testes | ✅ 18 s | ❌ 20 s | ✅ 22 s |
