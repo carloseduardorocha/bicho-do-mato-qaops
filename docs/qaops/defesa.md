@@ -2,7 +2,7 @@
 
 Atende à seção 9 do [enunciado](enunciado.pdf): demonstrar o acionamento do pipeline, uma execução aprovada, uma reprovação, as evidências e a correção. O professor pode perguntar a cada integrante: as perguntas prováveis e as respostas estão em [`perguntas.md`](perguntas.md), e os dois ensaiam tudo, não só a própria parte.
 
-Os números citados vêm do [`relatorio.md`](relatorio.md). Os slides ficam em [`slides.html`](slides.html) (abrir no navegador, setas trocam o slide).
+Os números citados vêm do [`relatorio.md`](relatorio.md). Os slides ficam em [`slides.html`](slides.html) (abrir no navegador; setas, espaço ou clique trocam o slide, e F põe em tela cheia; funciona sem internet).
 
 ## Como é a demonstração
 
@@ -40,14 +40,14 @@ O Carlos opera o computador o tempo todo; quem fala no bloco diz o que clicar. A
 | 0:40–1:50 | Renato | A funcionalidade estudada: depoimento do público nasce pendente e só aparece depois de aprovado. Os 7 riscos: R1 a R4 de comportamento (só teste pega), R5 a R7 de construção (ferramenta pega). | Slide 2 |
 | 1:50–2:50 | Carlos | O pipeline: um job por gate, em paralelo, G4 depois do G3, e o Quality gates como juiz. A branch protection exige os 7 checks e 1 aprovação, inclusive para admin. | Slide 3 |
 | 2:50–3:20 | Carlos | **Acionamento.** "Vamos repetir ao vivo o experimento da E4: esta branch tira uma linha, o filtro de aprovados." Mostrar o diff de 1 linha e clicar em *Create pull request*. | Aba 2 → PR novo, checks amarelos |
-| 3:20–4:30 | Carlos | Enquanto roda: os 6 gates, o critério de cada um e por que todos bloqueiam. Destacar o G4 por Service e a limitação de cada gate. | Slide 4 |
+| 3:20–4:30 | Carlos | Enquanto roda: os 6 gates, o critério de cada um e por que todos bloqueiam. Destacar o G4 por Service e a limitação dele: cobertura mostra que a linha rodou, não que o resultado foi conferido (a demonstração vai mostrar isso). | Slide 4 |
 | 4:30–6:30 | Renato | **Reprovação e evidências.** Voltar ao PR: G3 e Quality gates vermelhos, os outros 5 verdes, todos *Required*, merge bloqueado. Abrir o G3: as 6 anotações com arquivo e linha. Abrir o *Summary*: tabela dos gates e lista dos testes que falharam. Mostrar os artifacts (`g3-tests-junit`, `g4-coverage-report`). Explicar por que só o G3 reprovou: o código continua válido, no padrão e coberto. | PR → G3 → Summary → Artifacts |
 | 6:30–6:50 | Renato | **Correção.** "Devolvemos a linha." O Carlos roda `git revert --no-edit HEAD && git push`. | Terminal → PR, checks amarelos |
 | 6:50–8:00 | Carlos | **Execução aprovada**, enquanto a correção roda: o run verde da `main`. Tabela dos gates no *Summary*, cobertura por Service (88,7% no total), G5 com o aviso médio do `psy/psysh` que só alerta, G6 com os commits varridos. Os artifacts expiram em 90 dias, por isso o `experimento.md` guarda o log e a imagem. | Aba 3 → Summary → Artifacts |
 | 8:00–8:40 | Renato | **Corrigido.** Voltar ao PR: 7 checks verdes, falta só a aprovação. Fechar o PR sem merge: é uma demonstração; no experimento original (PR #7) o merge foi feito com *merge commit* para guardar a falha e a correção. | PR verde → *Close pull request* |
 | 8:40–9:30 | Renato | O experimento registrado: a previsão feita antes do run (só o G3 reprova, cobertura em 90,09%) se confirmou. O limite: um defeito só, escolhido sabendo que havia teste. | Slide 5 |
 | 9:30–10:30 | Carlos | Análise crítica: a revisão humana achou o que os gates não achavam (`pipefail`, senhas do seeder, contador de rotas). Lição: ligar a branch protection antes do primeiro PR. | Slide 6 (esquerda) |
-| 10:30–11:00 | Renato | Limitação mais importante: testes em SQLite, sem MySQL nem navegador (o BUG-7 só aparece no MySQL). Próximo passo: deploy só do que passou nos gates. "Obrigado, perguntas?" | Slide 6 (direita) |
+| 10:30–11:00 | Renato | Limitação mais importante: testes em SQLite, sem MySQL nem navegador (o BUG-7 só aparece no MySQL). Próximo passo: deploy só do que passou nos gates. "Obrigado, perguntas?" | Slide 6 (direita) → slide 7 |
 
 Total: 11 min, com 1 min de folga para a espera do Actions.
 
