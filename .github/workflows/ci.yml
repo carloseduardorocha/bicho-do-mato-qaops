@@ -34,7 +34,7 @@ jobs:
 
       - name: Boot Laravel and load all routes
         run: |
-          if ! php artisan route:list --ansi 2>&1 | tee ci-out/route-list.log; then
+          if ! php artisan route:list --no-ansi 2>&1 | tee ci-out/route-list.log; then
             echo "::error title=G1 Build::Laravel failed to boot (php artisan route:list). See the step log or the g1-build-logs artifact."
             exit 1
           fi
@@ -45,7 +45,9 @@ jobs:
           {
             echo "### G1 Build"
             echo "- composer install: ${{ job.status == 'success' && 'ok' || 'see log' }}"
-            echo "- Routes loaded: $(grep -cE '^\s+(GET|POST|PUT|PATCH|DELETE|ANY)' ci-out/route-list.log 2>/dev/null || echo 0)"
+            # grep -c prints 0 and exits 1 when nothing matches: keep its output only
+            routes=$(grep -cE '^\s+(GET|POST|PUT|PATCH|DELETE|ANY)' ci-out/route-list.log 2>/dev/null || true)
+            echo "- Routes loaded: ${routes:-0}"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload logs
