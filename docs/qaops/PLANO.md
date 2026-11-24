@@ -83,7 +83,7 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 
 ### E5. Revisão, relatório e defesa — Carlos faz, Renato aprova os PRs
 - [x] Revisão geral contra o enunciado (branch `chore/e5-review-fixes`): README sobe o app pelo Sail de ponta a ponta, seeder sem senha (admin vem do `.env`), arquivos mortos do `app/Http` apagados e baseline do Larastan vazia, `PartnerService` e `UserService` cobertos e bloqueando no G4, raiz do repo limpa, links dos docs no README
-- [ ] Relatório de 6 a 10 páginas, seções 1 a 9 e referências da §8 do enunciado. Evoluções a citar: `catch (ValidationException $e) { throw $e; }` repetido 9 vezes nos controllers do admin, rota `GET /admin/testimonials/pending` duplicada, aviso médio do `psy/psysh` (G5)
+- [x] Relatório de 6 a 10 páginas ([`relatorio.md`](relatorio.md), 9 páginas em PDF), seções 1 a 9 e referências da §8 do enunciado. Evoluções a citar: `catch (ValidationException $e) { throw $e; }` repetido 9 vezes nos controllers do admin, rota `GET /admin/testimonials/pending` duplicada, aviso médio do `psy/psysh` (G5)
 - [ ] Roteiro da defesa (10 a 12 min, §9): disparo, run aprovado, reprovado, evidências e correção. O professor pode perguntar a cada um, então os dois ensaiam tudo
 - [ ] Registro final da dupla (última página do enunciado), revisado pelos dois
 
