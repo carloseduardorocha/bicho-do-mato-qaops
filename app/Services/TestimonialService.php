@@ -39,6 +39,7 @@ class TestimonialService
     public function getPaginated(int $per_page = 15): LengthAwarePaginator
     {
         return Testimonial::query()
+            ->where(Testimonial::IS_APPROVED, true)
             ->orderBy(Testimonial::ID, 'desc')
             ->paginate($per_page);
     }
