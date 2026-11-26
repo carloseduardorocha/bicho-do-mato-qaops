@@ -45,11 +45,10 @@ O Carlos opera o computador o tempo todo; quem fala no bloco diz o que clicar. A
 | 6:30–6:50 | Renato | **Correção.** "Devolvemos a linha." O Carlos roda `git revert --no-edit HEAD && git push`. | Terminal → PR, checks amarelos |
 | 6:50–8:00 | Carlos | **Execução aprovada**, enquanto a correção roda: o run verde da `main`. Tabela dos gates no *Summary*, cobertura por Service (88,7% no total), G5 com o aviso médio do `psy/psysh` que só alerta, G6 com os commits varridos. Os artifacts expiram em 90 dias, por isso o `experimento.md` guarda o log e a imagem. | Aba 3 → Summary → Artifacts |
 | 8:00–8:40 | Renato | **Corrigido.** Voltar ao PR: 7 checks verdes, falta só a aprovação. Fechar o PR sem merge: é uma demonstração; no experimento original (PR #7) o merge foi feito com *merge commit* para guardar a falha e a correção. | PR verde → *Close pull request* |
-| 8:40–9:30 | Renato | O experimento registrado: a previsão feita antes do run (só o G3 reprova, cobertura em 90,09%) se confirmou. O limite: um defeito só, escolhido sabendo que havia teste. | Slide 5 |
-| 9:30–10:30 | Carlos | Análise crítica: a revisão humana achou o que os gates não achavam (`pipefail`, senhas do seeder, contador de rotas). Lição: ligar a branch protection antes do primeiro PR. | Slide 6 (esquerda) |
-| 10:30–11:00 | Renato | Limitação mais importante: testes em SQLite, sem MySQL nem navegador (o BUG-7 só aparece no MySQL). Próximo passo: deploy só do que passou nos gates. "Obrigado, perguntas?" | Slide 6 (direita) → slide 7 |
+| 8:40–10:00 | Renato | O experimento registrado, gate por gate: sem a linha, o depoimento pendente aparece no site (R1). G1, G2, G5 e G6 passam porque o código sobe, está no padrão e não mexe em biblioteca nem segredo. O G4 passa porque as linhas que sobraram continuam rodando (90,09% ≥ 90%): cobertura não confere o resultado. Só o G3 reprova. A previsão feita antes do run se confirmou. O limite: um defeito só, escolhido sabendo que havia teste. | Slide 5 |
+| 10:00–10:30 | Renato | Fechamento: o pipeline transforma a regra de moderação num check obrigatório, e sem ele essa linha teria entrado na `main`. "Obrigado, perguntas?" | Slide 6 |
 
-Total: 11 min, com 1 min de folga para a espera do Actions.
+Total: 10 min 30 s, com 1 min de folga para a espera do Actions (o enunciado pede de 10 a 12 min).
 
 ## Passo a passo no computador (Carlos)
 
@@ -67,8 +66,8 @@ O que o Carlos faz no teclado e no mouse, na ordem do roteiro. Quem fala está n
 | 6:30 | Ir para o terminal e rodar `git revert --no-edit HEAD && git push`. Voltar para a aba do PR e recarregar: aparece o commit "Revert …", e os checks voltam a ficar amarelos. |
 | 6:50 | Ir para a aba 3 (run aprovado da `main`), no **Summary**. Rolar: tabela dos gates toda verde, cobertura por Service, G5 com o aviso do `psy/psysh`, G6 com os commits varridos e, no fim, *Artifacts*. |
 | 8:00 | Voltar para a aba do PR e recarregar: 7 checks verdes, falta só a aprovação. Rolar até o fim e clicar em **Close pull request**, ao lado do botão de comentar. **Não** clicar em *Merge*. |
-| 8:40 | Voltar para os slides, **F** e **→** (slide 5). Às 9:30, **→** (slide 6). Às 10:30, **→** (slide 7, Obrigado). |
-| Fim | Ficar no slide 7 durante as perguntas. Se o professor pedir para ver algo, as abas continuam abertas. |
+| 8:40 | Voltar para os slides, **F** e **→** (slide 5). Às 10:00, **→** (slide 6, Obrigado). |
+| Fim | Ficar no slide 6 durante as perguntas. Se o professor pedir para ver algo, as abas continuam abertas. |
 
 Se algo travar, consultar o plano B abaixo, sem parar a fala: quem está falando continua pelo slide ou pelo relatório.
 

@@ -78,28 +78,27 @@
   .fact span { font-size: 1.25cqw; }
 
   /* s5 experiment */
-  .runs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2cqw; }
-  .run { background: #fff; border: 1px solid var(--line); border-top: .6cqw solid var(--ok); border-radius: var(--radius); padding: 1.5cqw 1.6cqw; display: flex; flex-direction: column; gap: .5cqw; }
-  .run.fail { border-top-color: var(--fail); }
-  .run .label { font-size: 1.2cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--ok); }
-  .run.fail .label { color: var(--fail); }
-  .run b { font-size: 2.6cqw; color: var(--green-dark); line-height: 1.1; }
-  .run p { font-size: 1.35cqw; }
-  .run .mono { font-size: 1.15cqw; }
   .diff { white-space: pre; font-variant-ligatures: none; font-family: var(--mono); font-size: 1.3cqw; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1cqw 1.4cqw; line-height: 1.5; }
   .diff span { display: block; }
   .diff .del { color: var(--fail); background: #fdecea; }
+  .exp-top { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2cqw; align-items: stretch; }
+  .effect { background: #fdecea; border-left: .5cqw solid var(--fail); border-radius: var(--radius); padding: 1cqw 1.4cqw; display: flex; flex-direction: column; justify-content: center; gap: .4cqw; }
+  .effect h3 { font-size: 1.2cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--fail); }
+  .effect p { font-size: 1.45cqw; color: var(--green-dark); }
+  .verdicts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2cqw; }
+  .v { background: #fff; border: 1px solid var(--line); border-left: .5cqw solid var(--ok); border-radius: var(--radius); padding: .9cqw 1.2cqw; display: flex; flex-direction: column; gap: .3cqw; }
+  .v.fail { border-left-color: var(--fail); background: #fdecea; }
+  .v .head { display: flex; align-items: center; gap: .6cqw; font-size: 1.45cqw; font-weight: 800; color: var(--green-dark); }
+  .v .st { margin-left: auto; font-size: 1.15cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--ok); }
+  .v.fail .st { color: var(--fail); }
+  .v p { font-size: 1.3cqw; line-height: 1.35; }
   .take { background: var(--green); color: var(--cream); border-radius: var(--radius); padding: 1.2cqw 1.6cqw; font-size: 1.5cqw; }
   .take b { color: #fff; }
 
-  /* s6 */
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4cqw; align-items: start; }
-  ul.clean { list-style: none; display: flex; flex-direction: column; gap: .9cqw; }
-  ul.clean li { padding-left: 1.6cqw; position: relative; font-size: 1.4cqw; }
-  ul.clean li::before { content: ""; position: absolute; left: 0; top: .6cqw; width: .7cqw; height: .7cqw; border-radius: 50%; background: var(--amber); }
-  .limit { border: .3cqw solid var(--amber); background: #fff7e8; border-radius: var(--radius); padding: 1.4cqw 1.6cqw; }
-  .limit h3 { font-size: 1.3cqw; text-transform: uppercase; letter-spacing: .08em; color: var(--brown); margin-bottom: .5cqw; }
-  .limit p { font-size: 1.55cqw; color: var(--green-dark); }
+  /* who speaks on each slide */
+  .who { position: absolute; top: 1.9cqw; right: 2.4cqw; z-index: 2; display: flex; align-items: center; gap: .6cqw; font-size: 1.15cqw; font-weight: 800; color: var(--green-dark); background: var(--cream); border: 1px solid var(--line); padding: .35cqw 1cqw .35cqw .8cqw; border-radius: 99px; }
+  .who::before { content: ""; width: .8cqw; height: .8cqw; border-radius: 50%; background: var(--amber); }
+  .cover .who { background: #ffffff1f; border-color: #ffffff33; color: #fff; }
 </style>
 </head>
 <body>
@@ -108,6 +107,7 @@
 
 <!-- 1 -->
 <section class="slide cover" data-state="s1">
+  <div class="who">Fala: Carlos</div>
   <div class="inner">
     <div class="kicker">Qualidade de Software · UFSM · Trabalho prático DevOps/QAOps</div>
     <h1>Pipeline de qualidade do site da ONG Bicho do Mato</h1>
@@ -118,11 +118,12 @@
     </div>
     <div class="repo">github.com/carloseduardorocha/bicho-do-mato-qaops</div>
   </div>
-  <div class="foot"><span></span><span>1 / 7</span></div>
+  <div class="foot"><span></span><span>1 / 6</span></div>
 </section>
 
 <!-- 2 -->
 <section class="slide" data-state="s2">
+  <div class="who">Fala: Renato</div>
   <div class="bar"></div>
   <div class="inner">
     <div class="kicker">Sistema e riscos</div>
@@ -152,11 +153,12 @@
       </table>
     </div>
   </div>
-  <div class="foot"><span>Verde: comportamento, só teste pega · Âmbar: construção, ferramenta pega</span><span>2 / 7</span></div>
+  <div class="foot"><span>Verde: comportamento, só teste pega · Âmbar: construção, ferramenta pega</span><span>2 / 6</span></div>
 </section>
 
 <!-- 3 -->
 <section class="slide" data-state="s3">
+  <div class="who">Fala: Carlos</div>
   <div class="bar"></div>
   <div class="inner">
     <div class="kicker">Pipeline · GitHub Actions</div>
@@ -223,11 +225,12 @@
       <div class="fact"><b>6 artifacts</b><span>logs, JUnit, cobertura HTML, audit, Gitleaks</span></div>
     </div>
   </div>
-  <div class="foot"><span><code>.github/workflows/ci.yml</code></span><span>3 / 7</span></div>
+  <div class="foot"><span><code>.github/workflows/ci.yml</code></span><span>3 / 6</span></div>
 </section>
 
 <!-- 4 -->
 <section class="slide" data-state="s4">
+  <div class="who">Fala: Carlos</div>
   <div class="bar"></div>
   <div class="inner">
     <div class="kicker">Quality gates · todos bloqueiam o merge</div>
@@ -244,74 +247,49 @@
       </tbody>
     </table>
   </div>
-  <div class="foot"><span>Mudar um limite = PR com revisão · detalhe em <code>docs/qaops/gates.md</code></span><span>4 / 7</span></div>
+  <div class="foot"><span>Mudar um limite = PR com revisão · detalhe em <code>docs/qaops/gates.md</code></span><span>4 / 6</span></div>
 </section>
 
 <!-- 5 -->
 <section class="slide" data-state="s5">
+  <div class="who">Fala: Renato</div>
   <div class="bar"></div>
   <div class="inner">
-    <div class="kicker">Experimento · PR #7</div>
+    <div class="kicker">Experimento · PR #7, repetido ao vivo</div>
     <h2>Quebramos a moderação de propósito: só o G3 percebeu</h2>
-    <div class="diff"><span>  return Testimonial::query()</span><span class="del">-     -&gt;where(Testimonial::IS_APPROVED, true)</span><span>      -&gt;orderBy(Testimonial::ID, 'desc')</span></div>
-    <div class="runs">
-      <div class="run"><span class="label">1 · Aprovado</span><b>133 / 133</b><p>6 gates verdes · 39 s</p><span class="mono">run 45243705351</span></div>
-      <div class="run fail"><span class="label">2 · Reprovado</span><b>6 falhas</b><p>G3 e Quality gates vermelhos · merge bloqueado · 36 s</p><span class="mono">run 45247878043</span></div>
-      <div class="run"><span class="label">3 · Corrigido</span><b>133 / 133</b><p>Filtro devolvido · 6 gates verdes · 49 s</p><span class="mono">run 45250612311</span></div>
+    <div class="exp-top">
+      <div class="diff"><span>  return Testimonial::query()</span><span class="del">-     -&gt;where(Testimonial::IS_APPROVED, true)</span><span>      -&gt;orderBy(Testimonial::ID, 'desc')</span></div>
+      <div class="effect">
+        <h3>Efeito no site (R1)</h3>
+        <p>Depoimento <b>pendente</b> aparece em <code>/depoimentos</code> e na home sem o admin aprovar.</p>
+      </div>
     </div>
-    <div class="take"><b>Previsão feita antes do run e confirmada:</b> o código continua válido, no padrão e com cobertura (90,09% ≥ 90%). Só um teste de comportamento pega esse defeito.</div>
+    <div class="verdicts">
+      <div class="v"><div class="head"><span class="pill amber">G1</span>Build<span class="st">✓ passou</span></div><p>O Laravel sobe e carrega as rotas.</p></div>
+      <div class="v"><div class="head"><span class="pill amber">G2</span>Análise<span class="st">✓ passou</span></div><p>Código válido, sem erro de tipo e no padrão.</p></div>
+      <div class="v fail"><div class="head"><span class="pill">G3</span>Testes<span class="st">✗ reprovou</span></div><p><b>6 testes de R1 falham</b>: o pendente aparece na lista.</p></div>
+      <div class="v"><div class="head"><span class="pill">G4</span>Cobertura<span class="st">✓ passou</span></div><p>As linhas que sobraram continuam rodando: 90,09% ≥ 90%.</p></div>
+      <div class="v"><div class="head"><span class="pill amber">G5</span>Dependências<span class="st">✓ passou</span></div><p>Nenhuma biblioteca mudou.</p></div>
+      <div class="v"><div class="head"><span class="pill amber">G6</span>Segredos<span class="st">✓ passou</span></div><p>Nenhuma senha ou chave no commit.</p></div>
+    </div>
+    <div class="take"><b>Previsão feita antes do run, e confirmada:</b> só o G3 reprova, porque só um teste confere o comportamento. Merge bloqueado; o revert devolve a linha e tudo volta ao verde.</div>
   </div>
-  <div class="foot"><span>Detalhe em <code>docs/qaops/experimento.md</code></span><span>5 / 7</span></div>
+  <div class="foot"><span>Detalhe em <code>docs/qaops/experimento.md</code></span><span>5 / 6</span></div>
 </section>
 
 <!-- 6 -->
-<section class="slide" data-state="s6">
-  <div class="bar"></div>
-  <div class="inner">
-    <div class="kicker">Análise crítica</div>
-    <h2>O que o pipeline pega, e o que ainda depende de gente</h2>
-    <div class="cols">
-      <div class="card">
-        <h3>A revisão humana achou o que os gates não achavam</h3>
-        <ul class="clean">
-          <li><code>pipefail</code> ausente: G2 nunca reprovaria (revisão do PR #4)</li>
-          <li>Senhas fixas no seeder e README que não subia o app (PR #8)</li>
-          <li>Contador de rotas do G1 mostrando 0 em todos os runs</li>
-        </ul>
-        <h3 style="margin-top:1.6cqw">Lição</h3>
-        <ul class="clean"><li>Ligar a branch protection <b>antes</b> do primeiro PR: os PRs #1 a #4 entraram sem aprovação</li></ul>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:1.6cqw">
-        <div class="limit">
-          <h3>Limitação mais importante</h3>
-          <p>Os testes rodam em SQLite, sem MySQL nem navegador. Um defeito do banco real (como o BUG-7, coluna de 255 para um texto de 500) ou da tela passa por todos os gates.</p>
-        </div>
-        <div class="card">
-          <h3>Próximo passo: deploy seguro</h3>
-          <ul class="clean">
-            <li>Deploy só do que passou nos gates, com aprovação manual</li>
-            <li>Migrations testadas contra MySQL no CI</li>
-            <li>Homologação, smoke test, monitoramento e rollback</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="foot"><span></span><span>6 / 7</span></div>
-</section>
-
-<!-- 7 -->
-<section class="slide cover thanks" data-state="s7">
+<section class="slide cover thanks" data-state="s6">
+  <div class="who">Fala: Renato</div>
   <div class="inner">
     <h1>Obrigado!</h1>
   </div>
-  <div class="foot"><span></span><span>7 / 7</span></div>
+  <div class="foot"><span></span><span>6 / 6</span></div>
 </section>
 
 </main>
 
 <script>
-  const ids = ['s1','s2','s3','s4','s5','s6','s7'];
+  const ids = ['s1','s2','s3','s4','s5','s6'];
   function show() {
     const m = location.hash.match(/state=(\w+)/);
     const s = m && ids.includes(m[1]) ? m[1] : 's1';
