@@ -63,7 +63,7 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 - [x] Jobs: dependências e build (G1), análise estática (G2), testes (G3), dependências (G5)
 - [x] Larastan instalado, com nível e baseline justificados (nível 5, 4 erros antigos na baseline; justificativa no PR #4)
 - [x] Artifacts (JUnit, logs) e resumo do job com a tabela dos gates
-- [x] Branch protection na `main`: PR obrigatório, checks obrigatórios, 1 aprovação (ligada logo após o merge do PR #4; G4 e G6 entram nos checks obrigatórios na E3)
+- [x] Branch protection na `main`: PR obrigatório, checks obrigatórios, 1 aprovação (ligada logo após o merge do PR #4, por isso os PRs #1 a #4 entraram sem aprovação prévia; G4 e G6 entram nos checks obrigatórios na E3)
 
 ### E2. Testes — Renato
 - [x] Factories de `News`, `Partner` e `Testimonial`
@@ -83,9 +83,9 @@ Ordem: E0 → (E1 e E2 em paralelo) → E3 → E4 → E5. Cada entrega tem a sua
 
 ### E5. Revisão, relatório e defesa — Carlos faz, Renato aprova os PRs
 - [x] Revisão geral contra o enunciado (branch `chore/e5-review-fixes`): README sobe o app pelo Sail de ponta a ponta, seeder sem senha (admin vem do `.env`), arquivos mortos do `app/Http` apagados e baseline do Larastan vazia, `PartnerService` e `UserService` cobertos e bloqueando no G4, raiz do repo limpa, links dos docs no README
-- [ ] Relatório de 6 a 10 páginas, seções 1 a 9 e referências da §8 do enunciado. Evoluções a citar: `catch (ValidationException $e) { throw $e; }` repetido 9 vezes nos controllers do admin, rota `GET /admin/testimonials/pending` duplicada, aviso médio do `psy/psysh` (G5)
-- [ ] Roteiro da defesa (10 a 12 min, §9): disparo, run aprovado, reprovado, evidências e correção. O professor pode perguntar a cada um, então os dois ensaiam tudo
-- [ ] Registro final da dupla (última página do enunciado), revisado pelos dois
+- [x] Relatório de 6 a 10 páginas ([`relatorio.md`](relatorio.md), 9 páginas em PDF), seções 1 a 9 e referências da §8 do enunciado. Evoluções a citar: `catch (ValidationException $e) { throw $e; }` repetido 9 vezes nos controllers do admin, rota `GET /admin/testimonials/pending` duplicada, aviso médio do `psy/psysh` (G5)
+- [x] Roteiro da defesa (10 a 12 min, §9): disparo, run aprovado, reprovado, evidências e correção ([`defesa.md`](defesa.md), com [`slides.html`](slides.html) e a branch `demo/defesa` para a reprovação ao vivo). O professor pode perguntar a cada um, então os dois ensaiam tudo ([`perguntas.md`](perguntas.md))
+- [ ] Registro final da dupla (última página do enunciado), revisado pelos dois ([`registro-final.md`](registro-final.md) preenchido; falta a confirmação dos dois)
 
 ## Donos de cada área
 

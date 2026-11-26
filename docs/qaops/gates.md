@@ -35,12 +35,12 @@ Entrega E3. Atende à seção 6 do [enunciado](enunciado.pdf): cada gate tem cri
 
 | Campo | Registro |
 |---|---|
-| Nome e critério | **Testes.** 100% dos testes PHPUnit passando (unitários e de feature), com pelo menos 1 teste executado. Hoje são 133. |
+| Nome e critério | **Testes.** 100% dos testes PHPUnit passando (unitários e de feature), com pelo menos 1 teste executado. Hoje são 160. |
 | Justificativa | R1 a R4: regressão em comportamento crítico (depoimento não aprovado no site, visitante no admin, envio inválido aceito, imagem órfã). Qualquer teste falhando significa um desses riscos voltando. Por isso não há tolerância: um teste instável deve ser corrigido, não ignorado. |
 | Momento | Etapa "testes automatizados", job `G3 Tests`, em push e PR na `main`. SQLite em memória, sem serviço externo. |
 | Evidência | Relatório JUnit (artifact `g3-tests-junit`), tabela com aprovados, falhas e tempo no resumo do run, e cada teste que falhou anotado no arquivo e na linha. |
 | Consequência | Bloqueia o merge. |
-| Limitação/exceção | Só pega o que os testes verificam. Ficam de fora o CRUD de parceiros e de usuários e as regras próprias do MySQL ([testes.md](testes.md), "O que ficou de fora"). Teste com `markTestSkipped` não reprova, mas aparece como "Skipped" no resumo e precisa de justificativa no PR. |
+| Limitação/exceção | Só pega o que os testes verificam. Ficam de fora o formulário de parceiros e de usuários pelo admin e as regras próprias do MySQL ([testes.md](testes.md), "O que ficou de fora"). Teste com `markTestSkipped` não reprova, mas aparece como "Skipped" no resumo e precisa de justificativa no PR. |
 
 ## G4. Cobertura
 
